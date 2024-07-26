@@ -1,23 +1,24 @@
 import React from "react";
 import "./Sidebar.css";
-import {assets} from '../../assets/assets';
+import { assets } from "../../assets/assets";
+import { NavLink } from "react-router-dom";
 
 const Slidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-options">
-        <div className="sidebar-option active">
+        <NavLink to="/addItems" className="sidebar-option">
           <img src={assets.add_icon} alt="" />
           <p>Add item</p>
-        </div>
-        <div className="sidebar-option">
+        </NavLink>
+        <NavLink to="/listItems" className="sidebar-option">
           <img src={assets.order_icon} alt="" />
           <p>List Item</p>
-        </div>
-        <div className="sidebar-option">
+        </NavLink>
+        <NavLink to='/orders' className="sidebar-option">
           <img src={assets.cart} alt="" />
           <p>Orders</p>
-        </div>
+        </NavLink>
       </div>
     </div>
   );
