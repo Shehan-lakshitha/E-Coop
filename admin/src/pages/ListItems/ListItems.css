@@ -1,0 +1,39 @@
+.list_Items {
+  flex-grow: 1;
+  min-height: 88vh;
+  margin-top: 20px;
+  margin-left: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 2px #888888;
+}
+.list_title {
+  padding: 20px 30px;
+}
+
+.list_table {
+  padding-left: 30px;
+  padding-right: 30px;
+  width: 100%;
+  border: none;
+}
+.table_header{
+    background-color: rgba(254, 182, 13, 0.3);
+    border-radius: 10px;
+}
+.header_row {
+  padding: 15px;
+  border-radius: 10px;
+  text-align: left;
+  color: rgba(254, 182, 13, 1);
+}
+.header_name {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.body_row img {
+  width: 40px;
+}
+.body_row td{
+    padding-left: 15px;
+}
