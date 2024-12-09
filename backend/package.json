@@ -1,0 +1,11 @@
+{
+  "name": "e-coop_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shehan-lakshitha",
+  "license": "ISC",
+  "description": ""
+}
