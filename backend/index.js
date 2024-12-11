@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import {connectDB} from "./config/db.js";
 import productRouter from "./routes/productRoute.js";
+import userRouter from "./routes/userRoute.js";
 
 //congiguration
 const app = express();
@@ -16,10 +17,7 @@ connectDB();
 
 //routes
 app.use("/api/products", productRouter);
-
-app.get("/", (req, res) => {
-  res.send("Server is running");
-});
+app.use("/api/users", userRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
