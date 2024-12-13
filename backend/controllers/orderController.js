@@ -13,6 +13,7 @@ const placeOrder = async (req, res) => {
       items: req.body.items,
       amount: req.body.amount,
       address: req.body.address,
+      phone: req.body.phone,
     });
     await newOrder.save();
     await User.findByIdAndUpdate(req.body.userId, { cartData: {} });
@@ -89,4 +90,44 @@ const verifyOrder = async (req, res) => {
   }
 };
 
-export { placeOrder, getOrders, getUserOrders, verifyOrder };
+const statusUpdate = async (req, res) => {
+  const { orderId, status } = req.body;
+  const allowedStatuses = ["processing", "shipped", "done", "ready for pickup"];
+
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({
+      success: false,
+      message: `${status} is not a valid status. Allowed statuses are: ${allowedStatuses.join(
+        ", "
+      )}`,
+    });
+  }
+
+  try {
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true, runValidators: true }
+    );
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Status updated.",
+    });
+  } catch (error) {
+    console.error("Error updating status:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error, failed to update the status.",
+    });
+  }
+};
+
+export { placeOrder, getOrders, getUserOrders, verifyOrder, statusUpdate };

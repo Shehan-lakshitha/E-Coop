@@ -6,7 +6,8 @@ const orderSchema = mongoose.Schema(
         items: { type: Array, required: true },
         amount: { type: Number, required: true },
         address: { type: Object },
-        status: { type: String, default: "processing", enum : ["processing", "shipped", "done", "ready to pickup"] },
+        phone: { type: String, required: true },
+        status: { type: String, default: "processing", enum : ["processing", "shipped", "done", "ready for pickup"] },
         payment: { type: Boolean, default: false },
     },
     {
