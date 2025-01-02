@@ -1,20 +1,27 @@
 import Product from "../models/productModel.js";
+import Category from "../models/categoryModel.js";
 
 // add products
 const addProduct = async (req, res) => {
-  const product = new Product({
-    name: req.body.name,
-    description: req.body.description,
-    price: req.body.price,
-    countInStock: req.body.countInStock,
-    category: req.body.category,
-    imageURL: req.body.imageURL,
-  });
   try {
-    product.save();
-    res
-      .status(200)
-      .json({ success: true, message: "Product added successfully" });
+    const category = await Category.findById(req.body.category);
+
+    if (!category) {
+      return res.status(400).json({ success: false, message: "Category not found" });
+    }
+
+    const product = new Product({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      countInStock: req.body.countInStock,
+      category: category._id,
+      imageURL: req.body.imageURL,
+    });
+
+    await product.save();
+
+    res.status(200).json({ success: true, message: "Product added successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Failed to add product" });

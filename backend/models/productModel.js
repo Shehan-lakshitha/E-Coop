@@ -7,7 +7,7 @@ const produnctSchema = mongoose.Schema(
     price: { type: Number, required: true },
     countInStock: { type: Number, required: true },
     imageURL: { type: String, required: true },
-    category: { type: String, required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
   },
   {
     timestamps: true,
