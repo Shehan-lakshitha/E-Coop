@@ -1,5 +1,6 @@
 import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
+import Product from "../models/productModel.js";
 import Stripe from "stripe";
 import dotenv from "dotenv";
 dotenv.config();
@@ -8,31 +9,57 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const placeOrder = async (req, res) => {
   try {
+    const itemsWithDetails = await Promise.all(
+      req.body.items.map(async (item) => {
+        const product = await Product.findById(item._id).populate("category");
+
+        if (!product) {
+          throw new Error(`Product with ID ${item._id} not found`);
+        }
+
+        return {
+          productId: item._id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          imageURL: product.imageURL,
+          category: product.category.name,
+          quantity: item.quantity,
+        };
+      })
+    );
+
+    const totalAmount = itemsWithDetails.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
     const newOrder = new Order({
       userId: req.body.userId,
-      items: req.body.items,
-      amount: req.body.amount,
+      items: itemsWithDetails,
+      amount: totalAmount,
       address: req.body.address,
       phone: req.body.phone,
     });
+
     await newOrder.save();
     await User.findByIdAndUpdate(req.body.userId, { cartData: {} });
 
-    const line_items = req.body.items.map((item) => {
-      return {
-        price_data: {
-          currency: "lkr",
-          product_data: {
-            name: item.name,
-          },
-          unit_amount: item.price * 100,
+    const line_items = itemsWithDetails.map((item) => ({
+      price_data: {
+        currency: "lkr",
+        product_data: {
+          name: item.name,
+          description: item.description,
+          images: [item.imageURL],
         },
-        quantity: item.quantity,
-      };
-    });
+        unit_amount: item.price * 100,
+      },
+      quantity: item.quantity,
+    }));
 
     const session = await stripe.checkout.sessions.create({
-      line_items: line_items,
+      line_items,
       mode: "payment",
       success_url: `${process.env.CLIENT_URL}/success`,
       cancel_url: `${process.env.CLIENT_URL}/cancel`,
@@ -40,10 +67,11 @@ const placeOrder = async (req, res) => {
 
     res.status(200).json({ success: true, session_url: session.url });
   } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ message: "Server error, Failed to place the order." });
+    console.error(error);
+    res.status(500).json({
+      message: "Server error, Failed to place the order.",
+      error: error.message,
+    });
   }
 };
 

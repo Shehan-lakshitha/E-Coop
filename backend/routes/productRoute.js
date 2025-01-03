@@ -14,6 +14,6 @@ productRouter.post("/add",authenticateRole, addProduct);
 productRouter.get("/allProducts", getAllProducts);
 productRouter.delete("/delete/:id", authenticateRole, deleteProduct);
 productRouter.put("/update/:id", authenticateRole, updateProduct);
-productRouter.post("/getProductsByIds", getProductsByIds);
+productRouter.get("/getProductsByIds", getProductsByIds);
 
 export default productRouter;
