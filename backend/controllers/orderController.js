@@ -132,11 +132,7 @@ const statusUpdate = async (req, res) => {
   }
 
   try {
-    const order = await Order.findByIdAndUpdate(
-      orderId,
-      { status },
-      { new: true, runValidators: true }
-    );
+    const order = await Order.findById(orderId);
 
     if (!order) {
       return res.status(404).json({
@@ -145,9 +141,23 @@ const statusUpdate = async (req, res) => {
       });
     }
 
+    if (!order.payment) {
+      return res.status(403).json({
+        success: false,
+        message: "Status update not allowed. Payment has not been completed.",
+      });
+    }
+
+    const updateorder = await Order.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true, runValidators: true }
+    )
+
     res.status(200).json({
       success: true,
-      message: "Status updated.",
+      message: "Status updated successfully.",
+      updateorder,
     });
   } catch (error) {
     console.error("Error updating status:", error);
