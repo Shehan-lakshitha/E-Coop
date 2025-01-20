@@ -1,9 +1,11 @@
-schemaVersion:
-  1.0
-  # Example endpoint configuration
+schemaVersion: 1.1
 endpoints:
-  - name: api
-    service:
-      port: 8080
-    type: REST
-    schemaFilePath: index.js
+    - name: api
+      displayName: api
+      service:
+        basePath: /
+        port: 8080
+      type: REST
+      networkVisibilities:
+        - Public
+      schemaFilePath: index.js
