@@ -5,37 +5,44 @@ info:
   description: API documentation for the E-Coop project
 servers:
   - url: http://localhost:8080
+    description: Development server
 paths:
-  /api/products:
-    /add:
-      post:
-        summary: Add a new product
-        requestBody:
+  /api/products/add:
+    post:
+      summary: Add a new product
+      parameters:
+        - in: header
+          name: token
           required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  price:
-                    type: number
-                  category:
-                    type: string
-                  image:
-                    type: string
-
-        responses:
-          "200":
-            description: Product added successfully
-
-    /allProducts:
-      get:
-        summary: Get all products
-        responses:
-          "200":
-            description: A list of all products
+          schema:
+            type: string
+          description: JWT token for authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                category:
+                  type: string
+                image:
+                  type: string
+      responses:
+        "200":
+          description: Product added successfully
+        "401":
+          description: Unauthorized - Token is missing or invalid
+  /api/products/allProducts:
+    get:
+      summary: Get all products
+      responses:
+        "200":
+          description: A list of all products
 
   /api/users:
     get:
@@ -43,18 +50,21 @@ paths:
       responses:
         "200":
           description: A list of users
+
   /api/cart:
     get:
       summary: Get cart items
       responses:
         "200":
           description: A list of cart items
+
   /api/orders:
     get:
       summary: Get all orders
       responses:
         "200":
           description: A list of orders
+
   /api/categories:
     get:
       summary: Get all categories
