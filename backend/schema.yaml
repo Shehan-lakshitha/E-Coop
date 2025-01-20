@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: E-Coop API
+  version: 1.0.0
+  description: API documentation for the E-Coop project
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/products:
+    get:
+      summary: Get all products
+      responses:
+        "200":
+          description: A list of products
+  /api/users:
+    get:
+      summary: Get all users
+      responses:
+        "200":
+          description: A list of users
+  /api/cart:
+    get:
+      summary: Get cart items
+      responses:
+        "200":
+          description: A list of cart items
+  /api/orders:
+    get:
+      summary: Get all orders
+      responses:
+        "200":
+          description: A list of orders
+  /api/categories:
+    get:
+      summary: Get all categories
+      responses:
+        "200":
+          description: A list of categories
