@@ -7,11 +7,36 @@ servers:
   - url: http://localhost:8080
 paths:
   /api/products:
-    get:
-      summary: Get all products
-      responses:
-        "200":
-          description: A list of products
+    /add:
+      post:
+        summary: Add a new product
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  price:
+                    type: number
+                  category:
+                    type: string
+                  image:
+                    type: string
+
+        responses:
+          "200":
+            description: Product added successfully
+
+    /allProducts:
+      get:
+        summary: Get all products
+        responses:
+          "200":
+            description: A list of all products
+
   /api/users:
     get:
       summary: Get all users
