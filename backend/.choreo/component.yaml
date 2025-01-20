@@ -6,4 +6,4 @@ endpoints:
     service:
       port: 8080
     type: REST
-    schemaFilePath: ./openapi.yaml
+    schemaFilePath: index.js
