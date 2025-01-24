@@ -1,4 +1,4 @@
-.add{
+.add {
     flex-grow: 1;
     min-height: 88vh;
     margin-top: 20px;
@@ -7,7 +7,7 @@
     box-shadow: 0px 0px 2px #888888;
 }
 
-.flex-col{
+.flex-col {
     display: flex;
     flex-direction: row;
     gap: 100px;
@@ -15,12 +15,14 @@
     padding-left: 8%;
     padding-right: 8%;
 }
-.add-details{
+
+.add-details {
     display: flex;
     flex-direction: column;
     gap: 50px;
 }
-.add_input{
+
+.add_input {
     width: 500px;
     height: 50px;
     border-radius: 10px;
@@ -29,7 +31,8 @@
     padding: 5px;
     font-size: 16px;
 }
-.text-area{
+
+.text-area {
     width: 100%;
     height: 200px;
     resize: none;
@@ -38,13 +41,15 @@
     border: none;
     box-shadow: 0px 0px 2px #888888;
 }
-.product-details{
+
+.product-details {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-.input{
+
+.input {
     width: 100%;
     height: 50px;
     border-radius: 10px;
@@ -53,16 +58,19 @@
     border: none;
     box-shadow: 0px 0px 2px #888888;
 }
-.flex-col p{
+
+.flex-col p {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 5px;
 }
-.add-img-upload img{
+
+.add-img-upload img {
     width: 200px;
     cursor: pointer;
 }
-button{
+
+button {
     width: 100%;
     height: 50px;
     border-radius: 10px;

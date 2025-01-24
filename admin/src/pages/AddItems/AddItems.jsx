@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { assets } from "../../assets/assets";
-import "./AddItems.css"
+import React, { useEffect, useState } from 'react';
+import './AddItems.css';
+import { assets } from '../../assets/assets';
 
 const AddItems = () => {
 
