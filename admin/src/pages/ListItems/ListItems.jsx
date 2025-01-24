@@ -1,10 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './ListItems.css';
-import { assets } from '../../assets/assets.js';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { GrEdit } from 'react-icons/gr';
+import { AiOutlineDelete } from 'react-icons/ai';
 
 const ListItems = () => {
+    const url = 'http://localhost:8080';
+    const [list, setList] = useState([]);
+
+    const fetchList = async () => {
+        try {
+            const response = await axios.get(`${url}/api/products/allProducts`);
+            console.log(response.data);
+            if (response.data.success) {
+                setList(response.data.data);
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const removeItem = async (id) => {
+        try {
+            const response = await axios.delete(
+                `${url}/api/products/delete/${id}`
+            );
+            if (response.data.success) {
+                toast.success(response.data.message);
+                fetchList();
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchList();
+    }, []);
+
     return (
-        <div className="list_Items">
+        <div className="list_items">
             <h3 className="list_title">All List Items</h3>
 
             <table className="list_table">
@@ -26,22 +66,38 @@ const ListItems = () => {
                             Price
                         </th>
                         <th scope="col" className="header_name">
-                            Delete
+                            Actions
                         </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr className="body_row">
-                        <td>
-                            <img src={assets.parcel_icon} alt="" />
-                        </td>
-                        <td>Nestamolt</td>
-                        <td>Nestamolt</td>
-                        <td>Nestamolt</td>
-                        <td>Nestamolt</td>
-                        <td>Nestamolt</td>
-                    </tr>
+                    {list.map((item) => (
+                        <tr className="body_row" key={item._id}>
+                            <td>
+                                <img src={item.imageURL} alt="Item-Image" />
+                            </td>
+                            <td>{item.name}</td>
+                            <td>{item.category}</td>
+                            <td>{item.description}</td>
+                            <td>Rs. {item.price}</td>
+                            <td className="action_buttons">
+                                <div>
+                                    <button className="edit_button">
+                                        <GrEdit />
+                                    </button>
+                                </div>
+                                <div>
+                                    <button
+                                        onClick={() => removeItem(item._id)}
+                                        className="delete_button"
+                                    >
+                                        <AiOutlineDelete />
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

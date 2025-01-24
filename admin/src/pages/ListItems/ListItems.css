@@ -1,4 +1,4 @@
-.list_Items {
+.list_items {
     flex-grow: 1;
     min-height: 88vh;
     margin-top: 20px;
@@ -41,4 +41,26 @@
 
 .body_row td {
     padding-left: 15px;
+}
+
+.action_buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.edit_button,
+.delete_button {
+    background-color: rgba(254, 182, 13, 0.3);
+    color: black;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.edit_button:hover,
+.delete_button:hover {
+    background-color: rgba(254, 182, 13, 1);
 }
