@@ -24,7 +24,7 @@
     cursor: pointer;
 }
 
-.active {
+.sidebar-option.active {
     background-color: rgba(254, 182, 13, 0.7);
     border-radius: 10px;
 }
