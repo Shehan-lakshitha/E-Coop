@@ -1,11 +1,13 @@
-.sidebar{
+.sidebar {
     width: 18%;
     min-height: 88vh;
     margin-top: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 2px #888888;
+    font-size: max(1vw, 16px);
 }
-.sidebar-options{
+
+.sidebar-options {
     padding-top: 50px;
     padding-left: 8%;
     padding-right: 8%;
@@ -13,23 +15,40 @@
     flex-direction: column;
     gap: 20px;
 }
-.sidebar-option{
+
+.sidebar-option {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 8px 10px;
     cursor: pointer;
 }
-.active{
+
+.active {
     background-color: rgba(254, 182, 13, 0.7);
     border-radius: 10px;
 }
 
 @media (max-width: 900px) {
-    .sidebar-option p{
+    .sidebar-option p {
         display: none;
     }
-    .sidebar-option{
+
+    .sidebar-option {
         justify-content: center;
     }
+
+    /* .sidebar-options .add-item {
+        padding: 8px 15px;
+    }
+
+    .sidebar-options .list-items {
+        padding: 8px 0px;
+    }
+
+    .sidebar-options .cart {
+        padding: 8px 10px;
+    } */
 }
+
+
