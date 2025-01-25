@@ -3,6 +3,8 @@ import './AddItems.css';
 import { assets } from '../../assets/assets';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Navbar from '../../components/Navbar/Navbar';
+import Sidebar from '../../components/Sidebar/Sidebar';
 
 const AddItems = () => {
     const url = 'http://localhost:8080';
@@ -106,6 +108,14 @@ const AddItems = () => {
     // }, [data]);
 
     return (
+        <>
+        <div>
+            <Navbar />
+        </div>
+        <div className="app-content">
+            <div>
+                <Sidebar />
+            </div>
         <div className="add">
             <form
                 className="flex-col"
@@ -227,6 +237,8 @@ const AddItems = () => {
                 </div>
             </form>
         </div>
+        </div>
+        </>
     );
 };
 

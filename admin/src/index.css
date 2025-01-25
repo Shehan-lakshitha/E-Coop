@@ -20,4 +20,12 @@ a {
 
 .app-content {
     display: flex;
+    gap: 140px;
+}
+
+@media screen and (max-width: 900px) {
+    .app-content {
+        gap: 20px;
+    }
+    
 }
