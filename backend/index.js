@@ -12,7 +12,7 @@ dotenv.config();
 
 //congiguration
 const app = express();
-const port = 8080;
+const port = 4000;
 
 //middlewares
 app.use(cors());
