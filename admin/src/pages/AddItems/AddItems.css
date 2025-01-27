@@ -176,7 +176,7 @@
 
 @media screen and (max-width: 600px) {
     .add {
-        margin-left: 10px;
+        margin-left: 3px;
     }
 
     .product-details {
@@ -187,16 +187,7 @@
 }
 
 @media screen and (max-width: 320px) {
-    .add {
-        margin-top: 15px;
-        margin-left: 5px;
-    }
-
     .add-img-upload img {
         width: 185px;
     }
 }
-
-
-   
-
