@@ -92,4 +92,29 @@
     color: white;
     font-size: 20px;
     margin-top: 20px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    .login-page .header {
+        font-size: 30px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .login-page {
+        margin-top: 40px;
+    }
+
+    .login-page .header {
+        font-size: 25px;
+        line-height: 2.5rem;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .login-page .header {
+        font-size: 23px;
+        line-height: 2.3rem;
+    }
 }
