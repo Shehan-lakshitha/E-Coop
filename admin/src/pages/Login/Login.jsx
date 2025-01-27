@@ -14,8 +14,8 @@ const Login = () => {
     const [errors, setErrors] = useState({});
 
     const handleInputChanges = (e) => {
-        const { id, value } = e.target;
-        setData((prev) => ({ ...prev, [id]: value }));
+        const { name, value } = e.target;
+        setData((prev) => ({ ...prev, [name]: value }));
     };
 
     const validateForm = (data) => {
@@ -52,11 +52,9 @@ const Login = () => {
         try {
             const response = await axios.post(
                 `${url}/api/users/login`,
-                formData,
                 {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
+                    email: data.email,
+                    password: data.password,
                 }
             );
 
