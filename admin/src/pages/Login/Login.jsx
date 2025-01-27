@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const navigate = useNavigate();
+    const url = 'http://localhost:4000';
     const [data, setData] = useState({
         email: '',
         password: '',
@@ -42,8 +43,6 @@ const Login = () => {
         if (Object.keys(errors).length > 0) {
             return setErrors(errors);
         }
-
-        const url = 'http://localhost:4000';
 
         try {
             const response = await axios.post(
