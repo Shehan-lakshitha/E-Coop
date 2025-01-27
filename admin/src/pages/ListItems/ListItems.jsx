@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import './ListItems.css';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { GrEdit } from 'react-icons/gr';
-import { AiOutlineDelete } from 'react-icons/ai';
+import React, { useEffect, useState } from "react";
+import "./ListItems.css";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { GrEdit } from "react-icons/gr";
+import { AiOutlineDelete } from "react-icons/ai";
 import DataTable from 'react-data-table-component';
-import Navbar from '../../components/Navbar/Navbar';
-import Sidebar from '../../components/Sidebar/Sidebar';
+import Navbar from "../../components/Navbar/Navbar";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import config from "../../../config.json";
 
 const ListItems = () => {
-    const url = 'http://localhost:4000';
-    const [list, setList] = useState([]);
+  const url = config.baseURL;
+  const [list, setList] = useState([]);
 
     const columns = [
         {
@@ -116,39 +117,36 @@ const ListItems = () => {
         },
     };
 
-    const fetchList = async () => {
-        try {
-            const response = await axios.get(`${url}/api/products/allProducts`);
-            console.log(response.data);
-            if (response.data.success) {
-                setList(response.data.data);
-            } else {
-                toast.error(response.data.message);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+  const fetchList = async () => {
+    try {
+      const response = await axios.get(`${url}/api/products/allProducts`);
+      if (response.data.success) {
+        setList(response.data.data);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const removeItem = async (id) => {
-        try {
-            const response = await axios.delete(
-                `${url}/api/products/delete/${id}`
-            );
-            if (response.data.success) {
-                toast.success(response.data.message);
-                fetchList();
-            } else {
-                toast.error(response.data.message);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
+  const removeItem = async (id) => {
+    try {
+      const response = await axios.delete(`${url}/api/products/delete/${id}`);
+      if (response.data.success) {
+        toast.success(response.data.message);
         fetchList();
-    }, []);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchList();
+  }, []);
 
     return (
         <>

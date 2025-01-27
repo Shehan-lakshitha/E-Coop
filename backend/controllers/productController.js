@@ -5,6 +5,7 @@ import Category from "../models/categoryModel.js";
 const addProduct = async (req, res) => {
   try {
     const category = await Category.findById(req.body.category);
+    console.log(category);
 
     if (!category) {
       return res.status(400).json({ success: false, message: "Category not found" });
