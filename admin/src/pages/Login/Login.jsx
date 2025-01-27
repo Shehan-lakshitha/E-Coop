@@ -4,8 +4,10 @@ import axios from 'axios';
 import { IoIosEye } from 'react-icons/io';
 import { IoIosEyeOff } from 'react-icons/io';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+    const navigate = useNavigate();
     const [data, setData] = useState({
         email: '',
         password: '',
@@ -55,6 +57,7 @@ const Login = () => {
             if (response.data.success) {
                 toast.success(response.data.message);
                 localStorage.setItem('authToken', response.data.token);
+                navigate('/addItems');
             } else {
                 toast.error(response.data.message);
             }
