@@ -1,6 +1,6 @@
 .add {
     flex-grow: 1;
-    min-height: 88vh;
+    min-height: 85vh;
     margin-top: 20px;
     margin-left: 20px;
     border-radius: 10px;
@@ -19,13 +19,14 @@
 .add-details {
     display: flex;
     flex-direction: column;
-    gap: 60px;
+    gap: 50px;
 }
 
 .add-details input,
 .add-details textarea,
 .add-details select {
     margin-top: 1px;
+    width: 100%;
 }
 
 .add-img-upload img {
@@ -136,3 +137,43 @@
     color: #dc2626;
     font-size: 14px;
 }
+
+@media screen and (max-width: 1024px) {
+    .flex-col {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .add-details {
+        gap: 40px;
+    }
+
+    .add-details button {
+        display: none;
+    }
+
+    .add-img-upload {
+        margin-top: -30px;
+    }
+
+    .add .btn {
+        display: block !important;
+    }
+
+    .btn button {
+        width: 100%;
+        height: 50px;
+        border-radius: 10px;
+        border: none;
+        background-color: rgba(254, 182, 13, 0.7);
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+        cursor: pointer;
+        margin-bottom: 30px;
+    }
+}
+
+
+   
+

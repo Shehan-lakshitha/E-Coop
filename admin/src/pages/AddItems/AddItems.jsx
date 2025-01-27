@@ -291,6 +291,9 @@ const AddItems = () => {
                                 </p>
                             )}
                         </div>
+                        <div className="btn" style={{ display: 'none' }}>
+                            <button onClick={addProduct}>Add Product</button>
+                        </div>
                     </form>
                 </div>
             </div>
