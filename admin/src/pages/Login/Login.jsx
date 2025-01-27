@@ -45,13 +45,10 @@ const Login = () => {
         }
 
         try {
-            const response = await axios.post(
-                `${url}/api/users/login`,
-                {
-                    email: data.email,
-                    password: data.password,
-                }
-            );
+            const response = await axios.post(`${url}/api/users/login`, {
+                email: data.email,
+                password: data.password,
+            });
 
             if (response.data.success) {
                 toast.success(response.data.message);
@@ -121,16 +118,6 @@ const Login = () => {
                     <button type="submit" className="login-btn">
                         Login
                     </button>
-
-                    {/* <p className="text-sm text-center text-white sm:text-lg">
-                            Not a member?{' '}
-                            <Link
-                                to="/registration"
-                                className="text-[#c59d5f] no-underline hover:text-[#fccb45] font-semibold"
-                            >
-                                Signup
-                            </Link>
-                        </p> */}
                 </form>
             </div>
         </div>
