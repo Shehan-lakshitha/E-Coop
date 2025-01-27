@@ -4,12 +4,117 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { GrEdit } from 'react-icons/gr';
 import { AiOutlineDelete } from 'react-icons/ai';
+import DataTable from 'react-data-table-component';
 import Navbar from '../../components/Navbar/Navbar';
 import Sidebar from '../../components/Sidebar/Sidebar';
 
 const ListItems = () => {
     const url = 'http://localhost:4000';
     const [list, setList] = useState([]);
+
+    const columns = [
+        {
+            name: 'Image',
+            selector: (row) => (
+                <div>
+                    <img
+                        src={row.imageURL}
+                        // alt={row.imageURL}
+                        className="body_row_img"
+                    />
+                </div>
+            ),
+        },
+        {
+            name: 'Name',
+            selector: (row) => (
+                <div>
+                    <p>{row.name}</p>
+                </div>
+            ),
+            sortable: true,
+        },
+        {
+            name: 'Description',
+            selector: (row) => (
+                <div>
+                    <p>{row.description}</p>
+                </div>
+            ),
+            width: '30%',
+            sortable: true,
+        },
+        {
+            name: 'Category',
+            selector: (row) => (
+                <div>
+                    <p>{row.category}</p>
+                </div>
+            ),
+            sortable: true,
+        },
+        {
+            name: 'Price',
+            selector: (row) => (
+                <div>
+                    <p>Rs. {row.price}</p>
+                </div>
+            ),
+            sortable: true,
+        },
+        {
+            name: 'Actions',
+            cell: (row) => (
+                <div className="action_buttons">
+                    <button className="edit_button">
+                        <GrEdit />
+                    </button>
+                    <button
+                        onClick={() => removeItem(row._id)}
+                        className="delete_button"
+                    >
+                        <AiOutlineDelete />
+                    </button>
+                </div>
+            ),
+        },
+    ];
+
+    const customStyles = {
+        headRow: {
+            style: {
+                border: 'none',
+            },
+        },
+        headCells: {
+            style: {
+                backgroundColor: 'rgba(254, 182, 13, 0.3)',
+                padding: '-10px',
+                borderRadius: '10px',
+                justifyContent: 'center',
+                color: 'rgba(254, 182, 13, 1)',
+                fontSize: '16px',
+                fontWeight: 'bold',
+            },
+        },
+        rows: {
+            style: {
+                fontSize: '14px',
+            },
+        },
+        cells: {
+            style: {
+                padding: '0px',
+                justifyContent: 'center',
+                borderRadius: '10px',
+            },
+        },
+        pagination: {
+            pageButtonsStyle: {
+                fill: 'black !important',
+            },
+        },
+    };
 
     const fetchList = async () => {
         try {
@@ -55,66 +160,15 @@ const ListItems = () => {
                     <Sidebar />
                 </div>
                 <div className="list_items">
-                    <h3 className="list_title">All List Items</h3>
+                    {/* <h3 className="list_title">All List Items</h3> */}
 
-                    <table className="list_table">
-                        <thead className="table_header">
-                            <tr className="header_row">
-                                <th scope="col" className="header_name">
-                                    Image
-                                </th>
-                                <th scope="col" className="header_name">
-                                    Name
-                                </th>
-                                <th scope="col" className="header_name">
-                                    Category
-                                </th>
-                                <th scope="col" className="header_name">
-                                    Description
-                                </th>
-                                <th scope="col" className="header_name">
-                                    Price
-                                </th>
-                                <th scope="col" className="header_name">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {list.map((item) => (
-                                <tr className="body_row" key={item._id}>
-                                    <td>
-                                        <img
-                                            src={item.imageURL}
-                                            alt="Item-Image"
-                                        />
-                                    </td>
-                                    <td>{item.name}</td>
-                                    <td>{item.category}</td>
-                                    <td>{item.description}</td>
-                                    <td>Rs. {item.price}</td>
-                                    <td className="action_buttons">
-                                        <div>
-                                            <button className="edit_button">
-                                                <GrEdit />
-                                            </button>
-                                        </div>
-                                        <div>
-                                            <button
-                                                onClick={() =>
-                                                    removeItem(item._id)
-                                                }
-                                                className="delete_button"
-                                            >
-                                                <AiOutlineDelete />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <DataTable
+                        columns={columns}
+                        data={list}
+                        fixedHeader
+                        pagination
+                        customStyles={customStyles}
+                    />
                 </div>
             </div>
         </>
