@@ -23,6 +23,8 @@ const Login = () => {
 
         if (!data.email) {
             errors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+            errors.email = 'Email is invalid';
         }
 
         if (!data.password) {
@@ -40,14 +42,6 @@ const Login = () => {
         }
 
         const url = 'http://localhost:4000';
-
-        const formData = new FormData();
-        formData.append('email', data.email);
-        formData.append('password', data.password);
-
-        for (let pair of formData.entries()) {
-            console.log(`${pair[0]}: ${pair[1]}`);
-        }
 
         try {
             const response = await axios.post(
