@@ -7,16 +7,43 @@ import Navbar from '../../components/Navbar/Navbar';
 import Sidebar from '../../components/Sidebar/Sidebar';
 
 const AddItems = () => {
-    const url = 'http://localhost:8080';
+    const url = 'http://localhost:4000';
     const [imageURL, setImageURL] = useState(false);
     const [data, setData] = useState({
         name: '',
         description: '',
         price: '',
-        category: 'Milk',
+        category: '',
         countInStock: '',
     });
+    const [categories, setCategories] = useState([]);
     const [errors, setErrors] = useState({});
+
+    const token = localStorage.getItem('authToken');
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get(`${url}/api/categories`, {
+                    headers: {
+                        token: `${token}`,
+                    },
+                });
+                if (response.data.success) {
+                    setCategories(response.data.data);
+                } else {
+                    toast.error(
+                        response.data.message || 'Failed to fetch categories'
+                    );
+                }
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+                toast.error('Something went wrong while fetching categories');
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     const onChangeHandler = (event) => {
         const name = event.target.name;
@@ -73,6 +100,10 @@ const AddItems = () => {
         formData.append('countInStock', Number(data.countInStock));
         formData.append('imageURL', imageURL);
 
+        for (let pair of formData.entries()) {
+            console.log(`${pair[0]}: ${pair[1]}`);
+        }
+
         try {
             const response = await axios.post(
                 `${url}/api/products/add`,
@@ -80,6 +111,7 @@ const AddItems = () => {
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
+                        token: `${token}`,
                     },
                 }
             );
@@ -89,7 +121,7 @@ const AddItems = () => {
                     name: '',
                     description: '',
                     price: '',
-                    category: 'Milk',
+                    category: '',
                     countInStock: '',
                 });
                 setImageURL(false);
@@ -100,12 +132,9 @@ const AddItems = () => {
             }
         } catch (error) {
             console.error(error);
+            toast.error('Something went wrong while adding product');
         }
     };
-
-    // useEffect(() => {
-    //   console.log(data);
-    // }, [data]);
 
     return (
         <>
@@ -173,10 +202,21 @@ const AddItems = () => {
                                     }`}
                                     id="category"
                                 >
-                                    <option value="milk">Milk</option>
+                                    {/* <option value="milk">Milk</option>
                                     <option value="rice">Rice</option>
                                     <option value="meat">Meat</option>
-                                    <option value="cereals">Cereals</option>
+                                    <option value="cereals">Cereals</option> */}
+                                    <option value="" disabled>
+                                        Select Category
+                                    </option>
+                                    {categories.map((category) => (
+                                        <option
+                                            key={category._id}
+                                            value={category._id}
+                                        >
+                                            {category.name}
+                                        </option>
+                                    ))}
                                 </select>
                                 {errors.category && (
                                     <p className="error-message">
