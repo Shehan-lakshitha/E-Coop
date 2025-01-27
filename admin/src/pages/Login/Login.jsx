@@ -67,7 +67,7 @@ const Login = () => {
         <div className="login-page">
             <h1 className="header">WELCOME BACK TO E-COOP ADMIN PANEL</h1>
             <div className="login-form">
-                <h3>Login!</h3>
+                <h3>Login</h3>
                 <form method="POST" onSubmit={handleSubmit}>
                     <div className="form-details">
                         <label htmlFor="email">Email</label>
