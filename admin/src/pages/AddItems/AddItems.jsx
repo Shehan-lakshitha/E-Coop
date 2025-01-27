@@ -160,7 +160,7 @@ const AddItems = () => {
                                     value={data.name}
                                     name="name"
                                     className={`add_input ${
-                                        errors.name ? 'border-red' : ''
+                                        errors.name ? 'error' : ''
                                     }`}
                                     type="text"
                                     id="productName"
@@ -179,7 +179,7 @@ const AddItems = () => {
                                     value={data.description}
                                     name="description"
                                     className={`add_input text-area ${
-                                        errors.description ? 'border-red' : ''
+                                        errors.description ? 'error' : ''
                                     }`}
                                     rows="6"
                                     id="description"
@@ -198,14 +198,10 @@ const AddItems = () => {
                                     value={data.category}
                                     name="category"
                                     className={`input ${
-                                        errors.category ? 'border-red' : ''
+                                        errors.category ? 'error' : ''
                                     }`}
                                     id="category"
                                 >
-                                    {/* <option value="milk">Milk</option>
-                                    <option value="rice">Rice</option>
-                                    <option value="meat">Meat</option>
-                                    <option value="cereals">Cereals</option> */}
                                     <option value="" disabled>
                                         Select Category
                                     </option>
@@ -219,7 +215,7 @@ const AddItems = () => {
                                     ))}
                                 </select>
                                 {errors.category && (
-                                    <p className="error-message">
+                                    <p className="error-message-category">
                                         {errors.category}
                                     </p>
                                 )}
@@ -232,9 +228,7 @@ const AddItems = () => {
                                         value={data.countInStock}
                                         name="countInStock"
                                         className={`input ${
-                                            errors.countInStock
-                                                ? 'border-red'
-                                                : ''
+                                            errors.countInStock ? 'error' : ''
                                         }`}
                                         type="number"
                                         id="productCount"
@@ -253,7 +247,7 @@ const AddItems = () => {
                                         value={data.price}
                                         name="price"
                                         className={`input ${
-                                            errors.price ? 'border-red' : ''
+                                            errors.price ? 'error' : ''
                                         }`}
                                         type="number"
                                         id="productPrice"
