@@ -15,10 +15,11 @@ const AddItems = () => {
     price: "",
     category: "",
     countInStock: "",
-    imageURL: "dffg",
+    imageURL: "",
   });
   const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState({});
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const token = localStorage.getItem("authToken");
 
@@ -53,11 +54,8 @@ const AddItems = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageBase64(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setSelectedImage(URL.createObjectURL(file)); // Show the image preview
+      setData((prevData) => ({ ...prevData, imageFile: file })); // Store the file for upload
     }
   };
 
@@ -83,9 +81,9 @@ const AddItems = () => {
       errors.countInStock = "Product count in stock is required";
     }
 
-    // if (!imageBase64) {
-    //   errors.imageBase64 = "Product image is required";
-    // }
+    if (!data.imageFile) {
+      errors.imageURL = "Product image is required";
+    }
 
     setErrors(errors);
 
@@ -96,19 +94,46 @@ const AddItems = () => {
     return true;
   };
 
+  const uploadImageToCloudinary = async () => {
+    const formData = new FormData();
+    formData.append("file", data.imageFile);
+    formData.append("upload_preset", "e_coop");
+    formData.append("cloud_name", "dclji77rq");
+
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dclji77rq/image/upload",
+        {
+          method: "post",
+          body: formData,
+        }
+      );
+
+      const result = await response.json();
+      return result.url; // Return the Cloudinary URL
+    } catch (error) {
+      console.error("Error uploading image to Cloudinary:", error);
+      throw new Error("Image upload failed");
+    }
+  };
+
   const addProduct = async () => {
     const isValid = validateForm();
     if (!isValid) {
       return;
     }
 
-    const payload = {
-      ...data,
-      price: Number(data.price),
-      countInStock: Number(data.countInStock),
-    };
-
     try {
+      // Upload image to Cloudinary
+      const imageURL = await uploadImageToCloudinary();
+
+      const payload = {
+        ...data,
+        imageURL,
+        price: Number(data.price),
+        countInStock: Number(data.countInStock),
+      };
+
       const response = await axios.post(`${url}/api/products/add`, payload, {
         headers: {
           "Content-Type": "application/json",
@@ -123,8 +148,10 @@ const AddItems = () => {
           price: "",
           category: "",
           countInStock: "",
-          imageURL: "dffg",
+          imageURL: "",
+          imageFile: null,
         });
+        setSelectedImage(null);
         setErrors({});
         toast.success(response.data.message);
       } else {
@@ -246,11 +273,21 @@ const AddItems = () => {
             <div className="add-img-upload">
               <p>Upload Image</p>
               <label htmlFor="image">
-                <img src={assets.upload_area} alt="Product-Image" />
+                <img
+                  src={selectedImage || assets.upload_area}
+                  alt="Product Preview"
+                  className="image-preview"
+                />
               </label>
-              <input type="file" id="image" hidden />
-              {errors.imageBase64 && (
-                <p className="error-message">{errors.imageBase64}</p>
+              <input
+                type="file"
+                id="image"
+                className={`input ${errors.imageURL ? "error" : ""}`}
+                hidden
+                onChange={handleImageChange}
+              />
+              {errors.imageURL && (
+                <p className="error-message">{errors.imageURL}</p>
               )}
             </div>
           </form>
