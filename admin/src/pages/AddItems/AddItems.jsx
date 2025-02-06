@@ -8,17 +8,18 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import config from '../../../config.json';
 
 const AddItems = () => {
-    const url = config.baseURL;
-    const [data, setData] = useState({
-        name: '',
-        description: '',
-        price: '',
-        category: '',
-        countInStock: '',
-        imageURL: 'dffg',
-    });
-    const [categories, setCategories] = useState([]);
-    const [errors, setErrors] = useState({});
+  const url = config.baseURL;
+  const [data, setData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    category: "",
+    countInStock: "",
+    imageURL: "",
+  });
+  const [categories, setCategories] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [selectedImage, setSelectedImage] = useState(null);
 
     const token = localStorage.getItem('authToken');
 
@@ -52,16 +53,13 @@ const AddItems = () => {
         setData((data) => ({ ...data, [name]: value }));
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImageBase64(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file)); // Show the image preview
+      setData((prevData) => ({ ...prevData, imageFile: file })); // Store the file for upload
+    }
+  };
 
     const validateForm = () => {
         const errors = {};
@@ -85,9 +83,9 @@ const AddItems = () => {
             errors.countInStock = 'Product count in stock is required';
         }
 
-        // if (!imageBase64) {
-        //   errors.imageBase64 = "Product image is required";
-        // }
+    if (!data.imageFile) {
+      errors.imageURL = "Product image is required";
+    }
 
         setErrors(errors);
 
@@ -95,207 +93,210 @@ const AddItems = () => {
             return false;
         }
 
-        return true;
-    };
+    return true;
+  };
 
-    const addProduct = async () => {
-        const isValid = validateForm();
-        if (!isValid) {
-            return;
+  const uploadImageToCloudinary = async () => {
+    const formData = new FormData();
+    formData.append("file", data.imageFile);
+    formData.append("upload_preset", "e_coop");
+    formData.append("cloud_name", "dclji77rq");
+
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dclji77rq/image/upload",
+        {
+          method: "post",
+          body: formData,
         }
+      );
 
-        const payload = {
-            ...data,
-            price: Number(data.price),
-            countInStock: Number(data.countInStock),
-        };
+      const result = await response.json();
+      return result.url; // Return the Cloudinary URL
+    } catch (error) {
+      console.error("Error uploading image to Cloudinary:", error);
+      throw new Error("Image upload failed");
+    }
+  };
 
-        try {
-            const response = await axios.post(
-                `${url}/api/products/add`,
-                payload,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        token: `${token}`,
-                    },
-                }
-            );
+  const addProduct = async () => {
+    const isValid = validateForm();
+    if (!isValid) {
+      return;
+    }
 
-            if (response.data.success) {
-                setData({
-                    name: '',
-                    description: '',
-                    price: '',
-                    category: '',
-                    countInStock: '',
-                    imageURL: 'dffg',
-                });
-                setErrors({});
-                toast.success(response.data.message);
-            } else {
-                toast.error(response.data.message);
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error('Something went wrong while adding product');
-        }
-    };
+    try {
+      // Upload image to Cloudinary
+      const imageURL = await uploadImageToCloudinary();
 
-    return (
-        <>
-            <div>
-                <Navbar />
-            </div>
-            <div className="app-content">
-                <div>
-                    <Sidebar />
+      const payload = {
+        ...data,
+        imageURL,
+        price: Number(data.price),
+        countInStock: Number(data.countInStock),
+      };
+
+      const response = await axios.post(`${url}/api/products/add`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+          token: `${token}`,
+        },
+      });
+
+      if (response.data.success) {
+        setData({
+          name: "",
+          description: "",
+          price: "",
+          category: "",
+          countInStock: "",
+          imageURL: "",
+          imageFile: null,
+        });
+        setSelectedImage(null);
+        setErrors({});
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong while adding product");
+    }
+  };
+
+  return (
+    <>
+      <div>
+        <Navbar />
+      </div>
+      <div className="app-content">
+        <div>
+          <Sidebar />
+        </div>
+        <div className="add">
+          <form
+            className="flex-col"
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <div className="add-details">
+              <div>
+                <p>Product Name</p>
+                <input
+                  onChange={onChangeHandler}
+                  value={data.name}
+                  name="name"
+                  className={`add_input ${errors.name ? "error" : ""}`}
+                  type="text"
+                  id="productName"
+                  placeholder="Ex: Milk"
+                />
+                {errors.name && <p className="error-message">{errors.name}</p>}
+              </div>
+              <div>
+                <p>Product Description</p>
+                <textarea
+                  onChange={onChangeHandler}
+                  value={data.description}
+                  name="description"
+                  className={`add_input text-area ${
+                    errors.description ? "error" : ""
+                  }`}
+                  rows="6"
+                  id="description"
+                  placeholder="Ex: Fresh milk from the farm"
+                ></textarea>
+                {errors.description && (
+                  <p className="error-message-description">
+                    {errors.description}
+                  </p>
+                )}
+              </div>
+              <div>
+                <p>Product Category</p>
+                <select
+                  onChange={onChangeHandler}
+                  value={data.category}
+                  name="category"
+                  className={`input ${errors.category ? "error" : ""}`}
+                  id="category"
+                >
+                  <option value="" disabled>
+                    Select Category
+                  </option>
+                  {categories.map((category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.category && (
+                  <p className="error-message-category">{errors.category}</p>
+                )}
+              </div>
+              <div className="product-details">
+                <div className="product-details-input">
+                  <p>Count In Stock</p>
+                  <input
+                    onChange={onChangeHandler}
+                    value={data.countInStock}
+                    name="countInStock"
+                    className={`input ${errors.countInStock ? "error" : ""}`}
+                    type="number"
+                    id="productCount"
+                    placeholder="Ex: 100"
+                  />
+                  {errors.countInStock && (
+                    <p className="error-message">{errors.countInStock}</p>
+                  )}
                 </div>
-                <div className="add">
-                    <form
-                        className="flex-col"
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                        }}
-                    >
-                        <div className="add-details">
-                            <div>
-                                <p>Product Name</p>
-                                <input
-                                    onChange={onChangeHandler}
-                                    value={data.name}
-                                    name="name"
-                                    className={`add_input ${
-                                        errors.name ? 'error' : ''
-                                    }`}
-                                    type="text"
-                                    id="productName"
-                                    placeholder="Ex: Milk"
-                                />
-                                {errors.name && (
-                                    <p className="error-message">
-                                        {errors.name}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <p>Product Description</p>
-                                <textarea
-                                    onChange={onChangeHandler}
-                                    value={data.description}
-                                    name="description"
-                                    className={`add_input text-area ${
-                                        errors.description ? 'error' : ''
-                                    }`}
-                                    rows="6"
-                                    id="description"
-                                    placeholder="Ex: Fresh milk from the farm"
-                                ></textarea>
-                                {errors.description && (
-                                    <p className="error-message-description">
-                                        {errors.description}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <p>Product Category</p>
-                                <select
-                                    onChange={onChangeHandler}
-                                    value={data.category}
-                                    name="category"
-                                    className={`input ${
-                                        errors.category ? 'error' : ''
-                                    }`}
-                                    id="category"
-                                >
-                                    <option value="" disabled>
-                                        Select Category
-                                    </option>
-                                    {categories.map((category) => (
-                                        <option
-                                            key={category._id}
-                                            value={category._id}
-                                        >
-                                            {category.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.category && (
-                                    <p className="error-message-category">
-                                        {errors.category}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="product-details">
-                                <div className="product-details-input">
-                                    <p>Count In Stock</p>
-                                    <input
-                                        onChange={onChangeHandler}
-                                        value={data.countInStock}
-                                        name="countInStock"
-                                        className={`input ${
-                                            errors.countInStock ? 'error' : ''
-                                        }`}
-                                        type="number"
-                                        id="productCount"
-                                        placeholder="Ex: 100"
-                                    />
-                                    {errors.countInStock && (
-                                        <p className="error-message">
-                                            {errors.countInStock}
-                                        </p>
-                                    )}
-                                </div>
-                                <div className="product-details-input">
-                                    <p>Product Price</p>
-                                    <input
-                                        onChange={onChangeHandler}
-                                        value={data.price}
-                                        name="price"
-                                        className={`input ${
-                                            errors.price ? 'error' : ''
-                                        }`}
-                                        type="number"
-                                        id="productPrice"
-                                        placeholder="Ex: 500"
-                                    />
-                                    {errors.price && (
-                                        <p className="error-message">
-                                            {errors.price}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                            <div>
-                                <button onClick={addProduct}>
-                                    Add Product
-                                </button>
-                            </div>
-                        </div>
-                        <div className="add-img-upload">
-                            <p>Upload Image</p>
-                            <label htmlFor="image">
-                                <img
-                                    src={assets.upload_area}
-                                    alt="Product-Image"
-                                />
-                            </label>
-                            <input type="file" id="image" hidden />
-                            {errors.imageBase64 && (
-                                <p className="error-message">
-                                    {errors.imageBase64}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="btn" style={{ display: 'none' }}>
-                            <button onClick={addProduct}>Add Product</button>
-                        </div>
-                    </form>
+                <div className="product-details-input">
+                  <p>Product Price</p>
+                  <input
+                    onChange={onChangeHandler}
+                    value={data.price}
+                    name="price"
+                    className={`input ${errors.price ? "error" : ""}`}
+                    type="number"
+                    id="productPrice"
+                    placeholder="Ex: 500"
+                  />
+                  {errors.price && (
+                    <p className="error-message">{errors.price}</p>
+                  )}
                 </div>
+              </div>
+              <div>
+                <button onClick={addProduct}>Add Product</button>
+              </div>
             </div>
-        </>
-    );
+            <div className="add-img-upload">
+              <p>Upload Image</p>
+              <label htmlFor="image">
+                <img
+                  src={selectedImage || assets.upload_area}
+                  alt="Product Preview"
+                  className="image-preview"
+                />
+              </label>
+              <input
+                type="file"
+                id="image"
+                className={`input ${errors.imageURL ? "error" : ""}`}
+                hidden
+                onChange={handleImageChange}
+              />
+              {errors.imageURL && (
+                <p className="error-message">{errors.imageURL}</p>
+              )}
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default AddItems;
