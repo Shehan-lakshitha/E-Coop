@@ -1,45 +1,45 @@
 .list_items {
-  flex-grow: 1;
-  min-height: 85vh;
-  margin-top: 20px;
-  margin-left: 20px;
-  border-radius: 0 0px 10px 10px;
-  border: 2px solid #e4dddd;
-  border-top: none;
+    flex-grow: 1;
+    min-height: 85vh;
+    margin-top: 20px;
+    margin-left: 20px;
+    border-radius: 0 0px 10px 10px;
+    border: 2px solid #e4dddd;
+    border-top: none;
 }
 
 .list_table {
-  padding-left: 30px;
-  padding-right: 30px;
-  width: 100%;
-  border: none;
+    padding-left: 30px;
+    padding-right: 30px;
+    width: 100%;
+    border: none;
 }
 
 .body_row_img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
+    width: 80px;
+    height: 30px;
+    object-fit: contain;
 }
 
 .action_buttons {
-  display: flex;
-  gap: 20px;
+    display: flex;
+    gap: 20px;
 }
 
 .edit_button,
 .delete_button {
-  background-color: rgba(254, 182, 13, 0.3);
-  color: black;
-  border: none;
-  border-radius: 5px;
-  margin-top: 5px;
-  width: 30px;
-  height: 30px;
-  font-size: 18px;
-  cursor: pointer;
+    background-color: rgba(254, 182, 13, 0.3);
+    color: black;
+    border: none;
+    border-radius: 5px;
+    margin-top: 5px;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
 }
 
 .edit_button:hover,
 .delete_button:hover {
-  background-color: rgba(254, 182, 13, 1);
+    background-color: rgba(254, 182, 13, 1);
 }
