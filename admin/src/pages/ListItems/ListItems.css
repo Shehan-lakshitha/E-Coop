@@ -43,3 +43,29 @@
 .delete_button:hover {
     background-color: rgba(254, 182, 13, 1);
 }
+
+@media  screen and (max-width: 1024px) {
+    .list_items {
+        margin-left: 10px;
+    }   
+}
+
+@media  screen and (max-width: 900px) {
+    .list_items {
+        width: 85%;
+    }
+}
+
+@media  screen and (max-width: 600px) {
+    .list_items {
+        margin-left: 3px;
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .list_items {
+        width: 75%;
+    }
+    
+}
