@@ -21,7 +21,7 @@ const ListItems = () => {
                 <div>
                     <img
                         src={row.imageURL}
-                        // alt={row.imageURL}
+                        alt={row.imageURL}
                         className="body_row_img"
                     />
                 </div>
@@ -168,8 +168,6 @@ const ListItems = () => {
                     <Sidebar />
                 </div>
                 <div className="list_items">
-                    {/* <h3 className="list_title">All List Items</h3> */}
-
                     <DataTable
                         columns={columns}
                         data={list}
