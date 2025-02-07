@@ -13,6 +13,7 @@ const ListItems = () => {
     const url = config.baseURL;
     const token = localStorage.getItem('authToken');
     const [list, setList] = useState([]);
+    const [categories, setCategories] = useState({});
 
     const columns = [
         {
@@ -118,11 +119,41 @@ const ListItems = () => {
         },
     };
 
+    const fetchCategories = async () => {
+        try {
+            const response = await axios.get(`${url}/api/categories`, {
+                headers: {
+                    token: `${token}`,
+                },
+            });
+            if (response.data.success) {
+                const categoryMap = response.data.data.reduce(
+                    (acc, category) => {
+                        acc[category._id] = category.name;
+                        return acc;
+                    },
+                    {}
+                );
+                setCategories(categoryMap);
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const fetchList = async () => {
         try {
             const response = await axios.get(`${url}/api/products/allProducts`);
             if (response.data.success) {
-                setList(response.data.data);
+                const productsWithCategoryNames = response.data.data.map(
+                    (product) => ({
+                        ...product,
+                        category: categories[product.category] || 'Unknown',
+                    })
+                );
+                setList(productsWithCategoryNames);
             } else {
                 toast.error(response.data.message);
             }
@@ -155,8 +186,13 @@ const ListItems = () => {
     };
 
     useEffect(() => {
-        fetchList();
-    }, []);
+        const fetchData = async () => {
+            await fetchCategories(); 
+            await fetchList();
+        };
+
+        fetchData();
+    }, [categories]);
 
     return (
         <>
