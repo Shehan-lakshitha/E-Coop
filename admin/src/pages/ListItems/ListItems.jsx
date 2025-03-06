@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { GrEdit } from 'react-icons/gr';
 import { AiOutlineDelete } from 'react-icons/ai';
+import { CgCloseO } from 'react-icons/cg';
 import DataTable from 'react-data-table-component';
 import Navbar from '../../components/Navbar/Navbar';
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -14,6 +15,7 @@ const ListItems = () => {
     const token = localStorage.getItem('authToken');
     const [list, setList] = useState([]);
     const [categories, setCategories] = useState({});
+    const [isFormVisible, setIsFormVisible] = useState(false);
 
     const columns = [
         {
@@ -69,7 +71,10 @@ const ListItems = () => {
             name: 'Actions',
             cell: (row) => (
                 <div className="action_buttons">
-                    <button className="edit_button">
+                    <button
+                        onClick={() => setIsFormVisible(true)}
+                        className="edit_button"
+                    >
                         <GrEdit />
                     </button>
                     <button
@@ -187,7 +192,7 @@ const ListItems = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await fetchCategories(); 
+            await fetchCategories();
             await fetchList();
         };
 
@@ -212,6 +217,104 @@ const ListItems = () => {
                         customStyles={customStyles}
                     />
                 </div>
+
+                {isFormVisible && (
+                    <div className="modal_overlay">
+                        <div className="form_container">
+                            <button
+                                className="close_button"
+                                onClick={() => setIsFormVisible(false)}
+                            >
+                                <CgCloseO />
+                            </button>
+                            <h1>Edit Item</h1>
+                            <form>
+                                <div className="edit-product">
+                                    <div className="edit-details">
+                                        <div>
+                                            <p>Product Name</p>
+                                            <input
+                                                className="edit_input"
+                                                type="text"
+                                                placeholder="Ex: Milk"
+                                                id="productName"
+                                                name="name"
+                                            />
+                                        </div>
+                                        <div>
+                                            <p>Product Description</p>
+                                            <textarea
+                                                name="description"
+                                                rows="6"
+                                                id="description"
+                                                placeholder="Ex: Fresh milk from the farm"
+                                            ></textarea>
+                                        </div>
+                                        <div>
+                                            <p>Product Category</p>
+                                            <select
+                                                className="edit_input"
+                                                name="category"
+                                                id="category"
+                                            >
+                                                {Object.keys(categories).map(
+                                                    (category) => (
+                                                        <option
+                                                            value={category}
+                                                        >
+                                                            {
+                                                                categories[
+                                                                    category
+                                                                ]
+                                                            }
+                                                        </option>
+                                                    )
+                                                )}
+                                            </select>
+                                        </div>
+                                        <div className="stock-price">
+                                            <div>
+                                                <p>Price</p>
+                                                <input
+                                                    className="edit_input"
+                                                    type="number"
+                                                    placeholder="Ex: 50"
+                                                    id="price"
+                                                    name="price"
+                                                />
+                                            </div>
+                                            <div>
+                                                <p>Stock</p>
+                                                <input
+                                                    className="edit_input"
+                                                    type="number"
+                                                    placeholder="Ex: 50"
+                                                    id="stock"
+                                                    name="stock"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="edit-image">
+                                        <p>Upload Image</p>
+                                        <label htmlFor="image">
+                                            <img
+                                                src=""
+                                                alt="Product Preview"
+                                                className="image-preview"
+                                            />
+                                        </label>
+                                        <input
+                                            type="file"
+                                            id="image"
+                                            name="image"
+                                        />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );
