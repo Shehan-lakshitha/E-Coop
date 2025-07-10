@@ -13,8 +13,7 @@ const Footer = () => {
             <img src={assets.logo} alt="e coop Logo" className="footer-logo" />
           </a>
           <p className="footer-description">
-            Welcome to e coop, your digital gateway to fresh, local produce. We connect you directly with our network of dedicated farmers and artisans, ensuring quality and supporting our community.{" "}
-            <a href="/about">Learn more about our mission.</a>
+Welcome to E-COOP. We are more than a marketplace; we are a digital cooperative born from the belief that the best food comes from our own community. Our mission is to shorten the distance between the hands that grow and the homes that gather, creating a direct bridge from our dedicated local farmers and artisans to you.            
           </p>
           <div className="footer-social-icons">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
@@ -29,8 +28,8 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-content-center">
-          {/* UPDATED: Renamed to FEATURES */}
-          <h2>FEATURES</h2>
+         
+          <h2>Easy Connect</h2>
           <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/about">About us</a></li>
@@ -39,17 +38,17 @@ const Footer = () => {
           </ul>
         </div>
         <div className="footer-content-right">
-          <h2>GET IN TOUCH</h2>
+          <h2>Get In Touch</h2>
           <ul>
             <li><a href="tel:+94112334400">+94 11 23 34 400</a></li>
-            <li><a href="mailto:newcoop@gmail.com">newcoop@gmail.com</a></li>
+            <li><a href="mailto:newcoop@gmail.com">newecoop@gmail.com</a></li>
           </ul>
         </div>
       </div>
       <hr />
       {/* UPDATED: Copyright text changed and centered */}
       <p className="footer-copyright">
-        Copyright 2025&copy; e coop - All Rights Reserved.
+        Copyright &copy; 2025 E-COOP PAMBAHINNA - All Rights Reserved.
       </p>
     </div>
   );
