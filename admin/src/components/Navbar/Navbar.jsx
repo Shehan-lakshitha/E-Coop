@@ -31,7 +31,7 @@ const Navbar = () => {
     <div className="navbar">
       <img className="logo" src={assets.logo} alt="E-COOP" />
       <div className="nav-name">
-        <h3>{userName}</h3>
+        <h4>{userName}</h4>
       </div>
     </div>
   );

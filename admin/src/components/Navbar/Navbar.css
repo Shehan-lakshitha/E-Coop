@@ -21,12 +21,12 @@
     align-items: center;
 }
 
-.nav-name h3 {
+.nav-name h4 {
     margin-right: 10px;
 }
 
 @media (max-width: 900px) {
-    .nav-name h3 {
+    .nav-name h4 {
         display: none;
     }
 }
