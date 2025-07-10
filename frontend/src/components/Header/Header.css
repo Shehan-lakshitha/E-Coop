@@ -1,61 +1,82 @@
 .header {
-    height: 32vw;
-    margin: 30px auto;
-    background: url('../../assets/header_img.png') no-repeat;
-    background-size: cover;
-    position: relative;
- 
+  height: 32vw;
+  margin: 30px auto;
+  background-color: #feb60dc9;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2vw;
+  gap: 2vw;
 }
 
 .header-contents {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    gap: 1.5vw;
-    max-width: 50%;
-    bottom: 10%;
-    left: 6vw;
-    animation: fadeIn 3s;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vw;
+  animation: fadeIn 3s;
 }
 
+.images {
+  
+  width: 50%;
+  height: 100%;
+  display: flex;
+  object-fit:cover;  
+  
+ 
+}
+
+/* Typography */
 .header-contents h2 {
-    font-weight: 500;
-    color: white;
-    font-size: max(3.5vw, 18px);
-    margin-bottom: 100px;
+  font-weight: 500;
+  color: white;
+  font-size: max(3.5vw, 18px);
 }
 
 .header-contents p {
-    color: white;
-    font-size: 1vw;
+ text-align: justify;
+  color: white;
+  font-size: 1vw;
 }
-.header-contents button {
-    border: none;
-    color: #747474;
-    font-weight: 500;
-    padding: 1vw 2.3vw;
-    background-color: white;
-    font-size: max(1vw, 13px);
-    border-radius: 50px;
-}
-@media (max-width: 1050px) {
-    .header {
-        height: 38vw;
-    }
 
-    .header-contents {
-        max-width: 45%;
-    }
+.header-contents button {
+  width: 30%;
+  border: none;
+  color: #747474;
+  font-weight: 500;
+  padding: 1vw 20px;
+  background-color: white;
+  font-size: max(1vw, 13px);
+  border-radius: 50px;
 }
+
+/* Responsive */
+@media (max-width: 1050px) {
+  .header {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .header-contents,
+   .images img {
+    width: 100%;
+    height: auto;
+  }
+
+  .header-contents {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 750px) {
-    .header-contents {
-        max-width: 65%;
-    }
-    .header-contents p {
-        display: none;
-    }
-    .header-contents button{
+  .header-contents p {
+    display: none;
+  }
+
+  .header-contents button {
     padding: 2vw 4vw;
-    }
+  }
+  
 }
