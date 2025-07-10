@@ -18,15 +18,19 @@
 .my-orders-header,
 .my-orders-order {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 2fr 2fr;
+  grid-template-columns: 4fr 1fr 1fr 2fr 2fr;
   padding: 12px 16px;
-  align-items: center;
+  align-items: start;
+  column-gap: 60px;
+  text-align: justify; 
 }
 
 .my-orders-header {
-  background-color: #f4f4f4;
+  background-color: #feb60d54;
   font-weight: bold;
   border-bottom: 1px solid #ccc;
+  color: gray;
+  font-size: 14px;
 }
 
 .my-orders-order {
