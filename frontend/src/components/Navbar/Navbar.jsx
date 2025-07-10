@@ -1,82 +1,81 @@
-import "./Navbar.css";
-import { assets } from "../../assets/assets";
-import { useState, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import axios from "axios";
+import "./MyOrders.css";
 import { StoreContext } from "../../context/StoreContext";
+import { assets } from "../../assets/assets";
 
-const Navbar = ({ setShowLogin }) => {
-  const [menu, setMenu] = useState("home");
-  const { getTotalCartAmount, token, setToken } = useContext(StoreContext);
+const MyOrders = () => {
+  const { token, url } = useContext(StoreContext);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken("");
-    navigate("/");
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(`${url}/api/orders/getUserOrders`, {
+        headers: { token },
+      });
+      setOrders(response.data.orders || []);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <div className="navbar">
-      <Link to="/">
-        <img src={assets.logo} alt="" className="logo" />
-      </Link>
-      <ul className="navbar-menu">
-        <Link
-          to="/"
-          onClick={() => setMenu("home")}
-          className={menu === "home" ? "active" : ""}
-        >
-          Home
-        </Link>
-        <a
-          href="#explore-menu"
-          onClick={() => setMenu("menu")}
-          className={menu === "menu" ? "active" : ""}
-        >
-          Products
-        </a>
+  useEffect(() => {
+    if (token) fetchOrders();
+  }, [token]);
 
-        <a
-          href="#footer"
-          onClick={() => setMenu("contact-us")}
-          className={menu === "contact-us" ? "active" : ""}
-        >
-          Contact us
-        </a>
-      </ul>
-      <div className="navbar-right">
-        <div className="navbar-search-icon">
-          <Link to="/cart">
-            <img src={assets.basket_icon} alt="" height={35} width={35} />
-          </Link>
-          <div className={getTotalCartAmount() === 0 ? "10" : "dot"}></div>
-        </div>
-        {!token ? (
-          <button onClick={() => setShowLogin(true)}>Sign in</button>
-        ) : (
-          <div className="navbar-profile">
-            <img src={assets.profile_icon} alt="" />
-            <ul className="nav-profile-dropdown">
-              <li>
-                <img src={assets.bag_icon} alt="" />
-                Orders
-              </li>
-              <hr />
-              <li onClick={logout}>
-                <img src={assets.logout_icon} alt="" />
-                Logout
-              </li>
-            </ul>
+  if (loading) return <p>Loading orders...</p>;
+
+  return (
+    <div className="my-orders">
+      <h2>My Orders</h2>
+      {orders.length === 0 ? (
+        <p>No orders found.</p>
+      ) : (
+        <div className="container">
+          <div className="my-orders-header">
+            <span>Items</span>
+            <span>Amount</span>
+            <span>Status</span>
+            <span>Address</span>
+            <span>Order Date</span>
           </div>
-        )}
-      </div>
+
+          {orders.map((order, index) => (
+            <div key={index} className="my-orders-order">
+              <div>
+                <img src={assets.parcel_icon} alt="Parcel Icon" />
+                <p>
+                  {order.items.map((item, idx) => (
+                    <span key={idx}>
+                      {item.name} x {item.quantity}
+                      {idx < order.items.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </p>
+              </div>
+
+              <p>${order.amount}.00</p>
+
+              <p>
+                <span style={{ color: "green" }}>&#x25cf;</span>{" "}
+                <b>{order.status}</b>
+              </p>
+
+              <p>
+                {order.address?.street}, {order.address?.city},{" "}
+                {order.address?.postalCode}
+              </p>
+
+              <p>{new Date(order.createdAt).toLocaleString()}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
-Navbar.propTypes = {
-  setShowLogin: PropTypes.func.isRequired,
-};
 
-export default Navbar;
+export default MyOrders;
