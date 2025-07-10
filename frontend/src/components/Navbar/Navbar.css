@@ -4,45 +4,52 @@
     justify-content: space-between;
     align-items: center;
 }
+
 .navbar .logo {
     width: 150px;
-
 }
-.navbar-menu{
-    display:flex;
+
+.navbar-menu {
+    display: flex;
     list-style: none;
     gap: 20px;
     color: #49557e;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 500;
 
 }
-.navbar-right{
+
+.navbar-right {
     display: flex;
     align-items: center;
     gap: 40px;
 
 }
+
 .navbar button {
     background: transparent;
     font-size: 16px;
+    font-weight: bold;
     color: #49557e;
-    border: 1px solid #B5292F;
+    border: 2px solid #FEB60D;
     padding: 10px 30px;
-    border-radius: 50px; 
+    border-radius: 15px;
     transition: 0.3s;
 }
 
 .navbar button:hover {
-background-color: #fff4f2;
+    background-color: #FEB60D;
+    color: #49557e;
 }
-.navbar .active{
+
+.navbar .active {
     padding-bottom: 2px;
-    border-bottom: 2px solid #49557e;
+    border-bottom: 3px solid #FEB60D;
 }
 
 .navbar li {
-    cursor: pointer; 
-    
+    cursor: pointer;
+
 }
 
 .navbar-search-icon {
@@ -58,40 +65,44 @@ background-color: #fff4f2;
     top: -8px;
     right: -8px;
 }
-.navbar-profile{
+
+.navbar-profile {
     position: relative;
 }
-.nav-profile-dropdown{
+
+.nav-profile-dropdown {
     position: absolute;
     display: none;
     right: 0;
     z-index: 1;
 }
 
-.navbar-profile:hover .nav-profile-dropdown{
+.navbar-profile:hover .nav-profile-dropdown {
     display: flex;
     flex-direction: column;
     gap: 10px;
     background-color: #fff2ef;
     padding: 12px 25px;
     border-radius: 4px;
-    border: 1px solid #B5292F ;
+    border: 1px solid #B5292F;
     outline: 2px solid white;
     list-style: none;
 }
 
-.nav-profile-dropdown li{
+.nav-profile-dropdown li {
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
 }
+
 .nav-profile-dropdown img {
     width: 20px;
 
 }
-.nav-profile-dropdown li:hover{
-    color: #B5292F ;
+
+.nav-profile-dropdown li:hover {
+    color: #B5292F;
 }
 
 
@@ -119,6 +130,7 @@ background-color: #fff4f2;
         padding: 8px 25px;
     }
 }
+
 @media (max-width: 900px) {
     .navbar .logo {
         width: 120px;
@@ -142,9 +154,10 @@ background-color: #fff4f2;
         font-size: 15px;
     }
 }
+
 @media (max-width: 750px) {
 
     .navbar-menu {
         display: none;
-}
+    }
 }

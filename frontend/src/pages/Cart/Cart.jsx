@@ -42,6 +42,15 @@ const Cart = () => {
         })}
       </div>
       <div className="cart-bottom">
+        <div className="cart-promocode">
+          <div>
+            <p>If you have a promo code, Enter it here</p>
+            <div className="cart-promocode-input">
+              <input type="text" placeholder="promo code" />
+              <button>Submit</button>
+            </div>
+          </div>
+        </div>
         <div className="cart-total">
           <h2>Cart Totals</h2>
           <div>
@@ -65,15 +74,6 @@ const Cart = () => {
           <button onClick={() => navigate("/order")}>
             PROCESS TO CHECKOUT
           </button>
-        </div>
-        <div className="cart-promocode">
-          <div>
-            <p>If you have a promo code, Enter it here</p>
-            <div className="cart-promocode-input">
-              <input type="text" placeholder="promo code" />
-              <button>Submit</button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
