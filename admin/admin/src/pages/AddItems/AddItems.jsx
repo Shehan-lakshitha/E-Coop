@@ -206,7 +206,7 @@ const AddItems = () => {
                                 )}
                             </div>
                             <div>
-                                <p>Product Description</p>
+                                <p>Product Description new</p>
                                 <textarea
                                     onChange={onChangeHandler}
                                     value={data.description}

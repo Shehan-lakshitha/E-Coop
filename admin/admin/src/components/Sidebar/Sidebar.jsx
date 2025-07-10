@@ -15,10 +15,7 @@ const Slidebar = () => {
                     <img src={assets.order_icon} alt="Order-Icon" />
                     <p>List Items</p>
                 </NavLink>
-                <NavLink to="/orders" className="sidebar-option orders">
-                    <img src={assets.cart} alt="Cart-Icon" />
-                    <p>Orders</p>
-                </NavLink>
+                
             </div>
         </div>
     );
