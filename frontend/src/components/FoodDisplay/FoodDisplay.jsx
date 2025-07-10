@@ -4,15 +4,21 @@ import "./FoodDisplay.css";
 import { StoreContext } from "../../context/StoreContext";
 import FoodItem from "../FoodItem/FoodItem";
 
-const FoodDisplay = ({category}) => {
-  const { food_list } = useContext(StoreContext);
+const FoodDisplay = ({ category }) => {
+  const { food_list, categoryList } = useContext(StoreContext);
+
+  const getCategoryName = (id) => {
+    const found = categoryList.find((cat) => cat._id === id);
+    return found ? found.name : "";
+  };
 
   return (
     <div className="food-display" id="food-display">
-      <h2>Top dishes near you</h2>
+      <h2>{category === "All" ? "All" : `${category}`} Products</h2>
       <div className="food-display-list">
         {food_list.map((item, index) => {
-          if (category === "All" || category === item.category) {
+          const itemCategoryName = getCategoryName(item.category);
+          if (category === "All" || category === itemCategoryName) {
             return (
               <FoodItem
                 key={index}
@@ -29,9 +35,9 @@ const FoodDisplay = ({category}) => {
     </div>
   );
 };
+
 FoodDisplay.propTypes = {
   category: PropTypes.string.isRequired,
 };
-
 
 export default FoodDisplay;
