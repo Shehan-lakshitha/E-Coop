@@ -15,8 +15,7 @@ const Navbar = ({ setShowLogin }) => {
     localStorage.removeItem("token");
     setToken("");
     navigate("/");
-
-  }
+  };
 
   return (
     <div className="navbar">
@@ -38,13 +37,7 @@ const Navbar = ({ setShowLogin }) => {
         >
           menu
         </a>
-        <a
-          href="#app-download"
-          onClick={() => setMenu("mobile-app")}
-          className={menu === "mobile-app" ? "active" : ""}
-        >
-          mobile-app
-        </a>
+
         <a
           href="#footer"
           onClick={() => setMenu("contact-us")}
