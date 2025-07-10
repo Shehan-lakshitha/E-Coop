@@ -137,7 +137,6 @@ const ListOrders = () => {
   }, []);
 
   const handleStatusChange = async (orderId, newStatus) => {
-    console.log("Updating status:", orderId, newStatus);
     try {
       const response = await axios.post(
         `${url}/api/orders/statusUpdate`,
