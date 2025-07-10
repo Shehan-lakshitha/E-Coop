@@ -20,6 +20,7 @@
     font-size: 14px;
     animation: fadeIn 0.5s;
 }
+
 .login-popup-title {
     display: flex;
     justify-content: space-between;
@@ -31,6 +32,7 @@
     width: 16px;
     cursor: pointer;
 }
+
 .login-popup-inputs {
     display: flex;
     flex-direction: column;
@@ -43,15 +45,17 @@
     padding: 10px;
     border-radius: 4px;
 }
+
 .login-popup-container button {
     border: none;
     padding: 10px;
     border-radius: 4px;
     color: white;
-    background-color: #B5292F;
+    background-color: #FEB60D;
     font-size: 15px;
     cursor: pointer;
 }
+
 .login-popup-condition {
     display: flex;
     align-items: start;
@@ -64,7 +68,7 @@
 }
 
 .login-popup p span {
-    color: #B5292F;
-    font-weight: 500;
+    color: #FEB60D;
+    font-weight: 600;
     cursor: pointer;
 }
