@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import './MyOrders.css'
+import "./MyOrders.css";
 import { StoreContext } from "../../context/StoreContext";
 import { assets } from "../../assets/assets";
 
@@ -43,35 +43,36 @@ const MyOrders = () => {
             <span>Order Date</span>
           </div>
 
-          {orders.map((order, index) => (
-            <div key={index} className="my-orders-order">
-              <div>
-                <img src={assets.parcel_icon} alt="Parcel Icon" />
+          {orders
+            .filter((order) => order.payment === true)
+            .map((order, index) => (
+              <div key={index} className="my-orders-order">
+                <div>
+                  {/* <img src={assets.parcel_icon} alt="Parcel Icon" /> */}
+                  <p>
+                    {order.items.map((item, idx) => (
+                      <div key={idx}>
+                        {item.name} x {item.quantity}
+                      </div>
+                    ))}
+                  </p>
+                </div>
+
+                <p>${order.amount}.00</p>
+
                 <p>
-                  {order.items.map((item, idx) => (
-                    <span key={idx}>
-                      {item.name} x {item.quantity}
-                      {idx < order.items.length - 1 ? ", " : ""}
-                    </span>
-                  ))}
+                  <span style={{ color: "green" }}>&#x25cf;</span>{" "}
+                  <b>{order.status}</b>
                 </p>
+
+                <p>
+                  {order.address?.street}, {order.address?.city},{" "}
+                  {order.address?.postalCode}
+                </p>
+
+                <p>{new Date(order.createdAt).toLocaleString()}</p>
               </div>
-
-              <p>${order.amount}.00</p>
-
-              <p>
-                <span style={{ color: "green" }}>&#x25cf;</span>{" "}
-                <b>{order.status}</b>
-              </p>
-
-              <p>
-                {order.address?.street}, {order.address?.city},{" "}
-                {order.address?.postalCode}
-              </p>
-
-              <p>{new Date(order.createdAt).toLocaleString()}</p>
-            </div>
-          ))}
+            ))}
         </div>
       )}
     </div>

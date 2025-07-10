@@ -1,5 +1,5 @@
 .sidebar {
-    width: 200%;
+    width: 200px;
     min-height: 85vh;
     margin-top: 20px;
     border-radius: 10px;
@@ -47,7 +47,7 @@
 
     .sidebar-option {
         justify-content: center;
-    }   
+    }
 }
 
 @media screen and (max-width: 600px) {
@@ -56,5 +56,3 @@
         height: 830px;
     }
 }
-
-

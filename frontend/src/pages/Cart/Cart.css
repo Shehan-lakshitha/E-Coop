@@ -40,6 +40,9 @@
 
 .cart-items-item .cross {
     cursor: pointer;
+    font-size: x-large;
+    color: #B5292F;
+    text-align: center;
 }
 
 .cart-bottom {
