@@ -1,0 +1,120 @@
+.login-page {
+    align-items: center;
+    text-align: center;
+    margin-top: 60px;
+}
+
+.login-page .header {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 0px 2px #888888;
+    border-radius: 10px;
+}
+
+.login-form h3 {
+    margin-top: -10px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.form-details {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.form-details label {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.form-details input {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #bab7b7;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-details input:focus {
+    outline: none;
+}
+
+.form-details .password-input {
+    display: flex;
+}
+
+.form-details .password-input input {
+    width: 85%;
+    border-radius: 10px 0px 0px 10px;
+}
+
+.form-details .password-input button {
+    width: 15%;
+    height: 40px;
+    border-radius: 0px 10px 10px 0px;
+    border: none;
+    background-color: rgba(254, 182, 13, 0.7);
+    color: white;
+    font-size: 22px;
+}
+
+.form-details .error {
+    border: 1px solid #dc2626;
+}
+
+.form-details .error-message {
+    color: #dc2626;
+    font-size: 14px;
+    margin-top: 2px;
+}
+
+.login-page .login-btn {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgba(254, 182, 13, 0.7);
+    color: white;
+    font-size: 20px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    .login-page .header {
+        font-size: 30px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .login-page {
+        margin-top: 40px;
+    }
+
+    .login-page .header {
+        font-size: 25px;
+        line-height: 2.5rem;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .login-page .header {
+        font-size: 23px;
+        line-height: 2.3rem;
+    }
+}
