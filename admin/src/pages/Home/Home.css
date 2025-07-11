@@ -1,0 +1,53 @@
+/* OverviewPage.css */
+
+.app-content {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.overview-container {
+  flex-grow: 1;
+  min-height: 85vh;
+  margin-top: 20px;
+  padding: 20px;
+  margin-left: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 2px #888888;
+}
+
+.ant-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.ant-statistic-title {
+  font-weight: 600;
+  color: #444;
+}
+
+.ant-statistic-content-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1890ff;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.best-sellers-table .ant-table-thead > tr > th {
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .overview-container {
+    padding: 12px;
+  }
+
+  .ant-statistic-content-value {
+    font-size: 18px;
+  }
+}

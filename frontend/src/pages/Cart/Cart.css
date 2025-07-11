@@ -8,7 +8,17 @@
     align-items: center;
     padding: 10px;
     color: grey;
-    background-color: #feb60d54;
+    background-color: #fcb00054;
+    border-radius: 10px;
+    font-size: max(1vw, 12px);
+}
+
+.cart-items-row {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr 1fr 1fr 0.5fr;
+    align-items: center;
+    padding: 10px;
+    color: grey;
     border-radius: 10px;
     font-size: max(1vw, 12px);
 }
@@ -30,6 +40,9 @@
 
 .cart-items-item .cross {
     cursor: pointer;
+    font-size: x-large;
+    color: #B5292F;
+    text-align: center;
 }
 
 .cart-bottom {

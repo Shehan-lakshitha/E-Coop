@@ -19,6 +19,8 @@ const PlaceOrder = () => {
     phone: "",
   });
 
+  const [loading, setLoading] = useState(false); // loading state
+
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -27,6 +29,8 @@ const PlaceOrder = () => {
 
   const placeOrder = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
     let orderItems = [];
 
     food_list.forEach((item) => {
@@ -42,7 +46,7 @@ const PlaceOrder = () => {
       address: {
         street: data.street,
         city: data.city,
-        postalCode: data.zipcode, 
+        postalCode: data.zipcode,
       },
       phone: data.phone,
       items: orderItems,
@@ -63,10 +67,12 @@ const PlaceOrder = () => {
         window.location.replace(session_url);
       } else {
         alert("Order placement failed. Please try again.");
+        setLoading(false);
       }
     } catch (err) {
       console.error("Order placement failed:", err.response?.data || err.message);
       alert("Something went wrong placing the order.");
+      setLoading(false);
     }
   };
 
@@ -153,28 +159,32 @@ const PlaceOrder = () => {
           placeholder="Phone"
         />
       </div>
+
       <div className="place-order-right">
         <div className="cart-total">
           <h2>Cart Totals</h2>
           <div>
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>${getTotalCartAmount()}</p>
+              <p>Rs. {getTotalCartAmount()}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
+              <p>Rs. {getTotalCartAmount() === 0 ? 0 : 2}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <b>Total</b>
               <b>
-                ${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}
+                Rs. {getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}
               </b>
             </div>
           </div>
-          <button type="submit">PROCESS TO PAYMENT</button>
+
+          <button type="submit" disabled={loading}>
+            {loading ? <span className="loader"></span> : "PROCESS TO PAYMENT"}
+          </button>
         </div>
       </div>
     </form>

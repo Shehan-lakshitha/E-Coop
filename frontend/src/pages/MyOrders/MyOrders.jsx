@@ -1,57 +1,79 @@
-import "react";
-import "./MyOrders.css";
-import { useContext, useEffect, useState } from "react";
-import { StoreContext } from "../../context/StoreContext";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import "./MyOrders.css";
+import { StoreContext } from "../../context/StoreContext";
 import { assets } from "../../assets/assets";
 
 const MyOrders = () => {
-  const { url, token } = useContext(StoreContext);
-  const [data, setData] = useState([]);
+  const { token, url } = useContext(StoreContext);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchOrders = async () => {
-    const response = await axios.post(
-      url + "/api/order/userorders",
-      {},
-      { headers: { token } }
-    );
-    setData(response.data.data);
+    try {
+      const response = await axios.get(`${url}/api/orders/getUserOrders`, {
+        headers: { token },
+      });
+      setOrders(response.data.orders || []);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (token) {
-      fetchOrders();
-    }
+    if (token) fetchOrders();
   }, [token]);
+
+  if (loading) return <p>Loading orders...</p>;
 
   return (
     <div className="my-orders">
       <h2>My Orders</h2>
-      <div className="container">
-        {data.map((order, index) => {
-          return (
-            <div key={index} className="my-orders-order">
-              <img src={assets.parcel_icon} alt="" />
-              <p>
-                {order.items.map((item, index) => {
-                  if (index === order.items.length - 1) {
-                    return item.name + " x " + item.quantity;
-                  } else {
-                    return item.name + " x " + item.quantity + ", ";
-                  }
-                })}
-              </p>
-              <p>${order.amount}.00</p>
-              <p>Items: {order.items.length}</p>
-              <p>
-                <span>&#x25cf;</span>
-                <b>{order.status}</b>
-              </p>
-              <button onClick={fetchOrders}>Track Order</button>
-            </div>
-          );
-        })}
-      </div>
+      {orders.length === 0 ? (
+        <p>No orders found.</p>
+      ) : (
+        <div className="container">
+          <div className="my-orders-header">
+            <span>Items</span>
+            <span>Amount</span>
+            <span>Status</span>
+            <span>Address</span>
+            <span>Order Date</span>
+          </div>
+
+          {orders
+            .filter((order) => order.payment === true)
+            .map((order, index) => (
+              <div key={index} className="my-orders-order">
+                <div>
+                  <p>
+                    {order.items.map((item, idx) => (
+                      <div key={idx}>
+                        {item.name} x {item.quantity}
+                      </div>
+                    ))}
+                  </p>
+                </div>
+
+                <p>Rs. {order.amount}.00</p>
+
+                <p>
+                  <span style={{ color: "green" }}>&#x25cf;</span>{" "}
+                  <b>{order.status}</b>
+                </p>
+
+                <p>
+                  {order.address?.street}, {order.address?.city},{" "}
+                  {order.address?.postalCode}
+                </p>
+
+                <p>{new Date(order.createdAt).toLocaleString()}</p>
+              </div>
+            ))}
+        </div>
+      )}
     </div>
   );
 };

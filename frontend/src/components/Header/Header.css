@@ -42,6 +42,7 @@
 }
 
 .header-contents button {
+    width: 50% ;
     border: none;
     color: #747474;
     font-weight: 500;

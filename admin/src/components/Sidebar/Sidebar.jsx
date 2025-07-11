@@ -7,6 +7,10 @@ const Slidebar = () => {
     return (
         <div className="sidebar">
             <div className="sidebar-options">
+                <NavLink to="/home" className="sidebar-option add-item">
+                    <img className='imgp' src={assets.overview} alt="Overview" />
+                    <p>Overview</p>
+                </NavLink>
                 <NavLink to="/addItems" className="sidebar-option add-item">
                     <img src={assets.add_icon} alt="Add-Icon" />
                     <p>Add item</p>

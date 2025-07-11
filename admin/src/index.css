@@ -18,9 +18,20 @@ a {
     color: inherit;
 }
 
-.app-content {
+/* .app-content {
     display: flex;
     gap: 140px;
+} */
+
+.app-content {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.app-content>div:first-child {
+    width: 250px;
+    /* adjust according to your Sidebar size */
 }
 
 @media screen and (max-width: 900px) {
