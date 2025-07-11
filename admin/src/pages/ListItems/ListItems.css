@@ -7,6 +7,12 @@
     border: 2px solid #e4dddd;
     border-top: none;
 }
+.heading {
+    margin-left: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
 
 .list_table {
     padding-left: 30px;
@@ -139,6 +145,16 @@
     gap: 20px;
 }
 
+.edit_submit_button{
+    background-color: rgba(254, 182, 13, 1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 30px;
+}
 
 @media screen and (max-width: 1024px) {
     .list_items {

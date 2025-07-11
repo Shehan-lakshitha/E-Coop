@@ -7,7 +7,12 @@
     border: 2px solid #e4dddd;
     border-top: none;
 }
-
+.heading {
+    margin-left: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
 .list_table {
     padding-left: 30px;
     padding-right: 30px;
@@ -139,6 +144,71 @@
     display: flex;
     gap: 20px;
 }
+.order-items-list {
+  padding-left: 15px;
+  margin: 0;
+  white-space: normal;
+  word-break: break-word;
+  list-style: disc inside;
+}
+
+.order-status-select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px 10px 10px;
+}
+
+.status-counts {
+  display: flex;
+  gap: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-processing {
+  color: #f39c12; /* orange */
+}
+
+.status-shipped {
+  color: #3498db; /* blue */
+}
+
+.status-pickup {
+  color: #9b59b6; /* purple */
+}
+
+.status-done {
+  color: #27ae60; /* green */
+}
+
+/* Style for the print button */
+.print-btn {
+  background-color: #feb60d96;   
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: background-color 0.3s ease;
+}
+
+.print-btn:hover {
+  background-color: #e0a800;  /* Darker on hover */
+}
+
 
 
 @media screen and (max-width: 1024px) {

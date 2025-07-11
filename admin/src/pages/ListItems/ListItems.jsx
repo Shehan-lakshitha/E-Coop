@@ -13,9 +13,11 @@ import config from "../../../config.json";
 const ListItems = () => {
   const url = config.baseURL;
   const token = localStorage.getItem("authToken");
+
   const [list, setList] = useState([]);
   const [categories, setCategories] = useState({});
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const columns = [
     {
@@ -28,39 +30,23 @@ const ListItems = () => {
     },
     {
       name: "Name",
-      selector: (row) => (
-        <div>
-          <p>{row.name}</p>
-        </div>
-      ),
+      selector: (row) => <p>{row.name}</p>,
       sortable: true,
     },
     {
       name: "Description",
-      selector: (row) => (
-        <div>
-          <p>{row.description}</p>
-        </div>
-      ),
+      selector: (row) => <p>{row.description}</p>,
       width: "30%",
       sortable: true,
     },
     {
       name: "Category",
-      selector: (row) => (
-        <div>
-          <p>{row.category}</p>
-        </div>
-      ),
+      selector: (row) => <p>{row.categoryName}</p>,
       sortable: true,
     },
     {
       name: "Price",
-      selector: (row) => (
-        <div>
-          <p>Rs. {row.price}</p>
-        </div>
-      ),
+      selector: (row) => <p>Rs. {row.price}</p>,
       sortable: true,
     },
     {
@@ -68,7 +54,10 @@ const ListItems = () => {
       cell: (row) => (
         <div className="action_buttons">
           <button
-            onClick={() => setIsFormVisible(true)}
+            onClick={() => {
+              setSelectedProduct(row);
+              setIsFormVisible(true);
+            }}
             className="edit_button"
           >
             <GrEdit />
@@ -82,37 +71,20 @@ const ListItems = () => {
   ];
 
   const customStyles = {
-    headRow: {
-      style: {
-        border: "none",
-      },
-    },
     headCells: {
       style: {
         backgroundColor: "rgba(254, 182, 13, 0.3)",
-        padding: "-10px",
-        borderRadius: "10px",
-        justifyContent: "center",
         color: "rgba(254, 182, 13, 1)",
         fontSize: "16px",
         fontWeight: "bold",
-      },
-    },
-    rows: {
-      style: {
-        fontSize: "14px",
+        borderRadius: "10px",
+        justifyContent: "center",
       },
     },
     cells: {
       style: {
-        padding: "0px",
         justifyContent: "center",
-        borderRadius: "10px",
-      },
-    },
-    pagination: {
-      pageButtonsStyle: {
-        fill: "black !important",
+        padding: "10px",
       },
     },
   };
@@ -144,7 +116,7 @@ const ListItems = () => {
       if (response.data.success) {
         const productsWithCategoryNames = response.data.data.map((product) => ({
           ...product,
-          category: categories[product.category] || "Unknown",
+          categoryName: categories[product.category] || "Unknown",
         }));
         setList(productsWithCategoryNames);
       } else {
@@ -175,23 +147,64 @@ const ListItems = () => {
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.put(
+        `${url}/api/products/update/${selectedProduct._id}`,
+        {
+          name: selectedProduct.name,
+          description: selectedProduct.description,
+          price: selectedProduct.price,
+          countInStock: selectedProduct.countInStock,
+          category: selectedProduct.category,
+          imageURL: selectedProduct.imageURL,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: `${token}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        toast.success("Product updated successfully!");
+        setIsFormVisible(false);
+        fetchList();
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Update failed!");
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchCategories();
-      await fetchList();
     };
-
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(categories).length > 0) {
+      fetchList();
+    }
   }, [categories]);
 
   return (
     <>
-      <div>
-        <Navbar />
-      </div>
+      <Navbar />
       <div className="app-content">
         <Sidebar />
         <div className="add">
+          <h2 className="heading">List Items</h2>
           <DataTable
             columns={columns}
             data={list}
@@ -201,7 +214,7 @@ const ListItems = () => {
           />
         </div>
 
-        {isFormVisible && (
+        {isFormVisible && selectedProduct && (
           <div className="modal_overlay">
             <div className="form_container">
               <button
@@ -211,7 +224,7 @@ const ListItems = () => {
                 <CgCloseO />
               </button>
               <h1>Edit Item</h1>
-              <form>
+              <form onSubmit={handleUpdate}>
                 <div className="edit-product">
                   <div className="edit-details">
                     <div>
@@ -219,9 +232,9 @@ const ListItems = () => {
                       <input
                         className="edit_input"
                         type="text"
-                        placeholder="Ex: Milk"
-                        id="productName"
                         name="name"
+                        value={selectedProduct.name || ""}
+                        onChange={handleChange}
                       />
                     </div>
                     <div>
@@ -229,20 +242,21 @@ const ListItems = () => {
                       <textarea
                         name="description"
                         rows="6"
-                        id="description"
-                        placeholder="Ex: Fresh milk from the farm"
-                      ></textarea>
+                        value={selectedProduct.description || ""}
+                        onChange={handleChange}
+                      />
                     </div>
                     <div>
                       <p>Product Category</p>
                       <select
                         className="edit_input"
                         name="category"
-                        id="category"
+                        value={selectedProduct.category || ""}
+                        onChange={handleChange}
                       >
-                        {Object.keys(categories).map((category) => (
-                          <option value={category}>
-                            {categories[category]}
+                        {Object.keys(categories).map((categoryId) => (
+                          <option key={categoryId} value={categoryId}>
+                            {categories[categoryId]}
                           </option>
                         ))}
                       </select>
@@ -253,9 +267,9 @@ const ListItems = () => {
                         <input
                           className="edit_input"
                           type="number"
-                          placeholder="Ex: 50"
-                          id="price"
                           name="price"
+                          value={selectedProduct.price || ""}
+                          onChange={handleChange}
                         />
                       </div>
                       <div>
@@ -263,25 +277,25 @@ const ListItems = () => {
                         <input
                           className="edit_input"
                           type="number"
-                          placeholder="Ex: 50"
-                          id="stock"
-                          name="stock"
+                          name="countInStock"
+                          value={selectedProduct.countInStock || ""}
+                          onChange={handleChange}
                         />
                       </div>
                     </div>
                   </div>
                   <div className="edit-image">
-                    <p>Upload Image</p>
-                    <label htmlFor="image">
-                      <img
-                        src=""
-                        alt="Product Preview"
-                        className="image-preview"
-                      />
-                    </label>
-                    <input type="file" id="image" name="image" />
+                    <p>Product Image</p>
+                    <img
+                      src={selectedProduct.imageURL}
+                      alt="Preview"
+                      className="image-preview"
+                    />
                   </div>
                 </div>
+                <button type="submit" className="edit_submit_button">
+                  Update Product
+                </button>
               </form>
             </div>
           </div>
