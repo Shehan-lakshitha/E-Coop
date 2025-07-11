@@ -5,30 +5,30 @@ import { toast } from "react-toastify";
 import DataTable from "react-data-table-component";
 import Navbar from "../../components/Navbar/Navbar";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import PrintOrderButton from "./PrintOrderButton";
 import config from "../../../config.json";
 
 const ListOrders = () => {
   const url = config.baseURL;
   const token = localStorage.getItem("authToken");
   const [orders, setOrders] = useState([]);
+  const [statusCounts, setStatusCounts] = useState({});
+
+  const statusOptions = ["processing", "shipped", "ready for pickup", "done"];
 
   const columns = [
-    // {
-    //     name: 'Order ID',
-    //     selector: row => row._id,
-    //     sortable: true,
-    //     width: '180px'
-    // },
     {
-      name: "User ID",
-      selector: (row) => row.userId,
+      name: "User Name",
+      selector: (row) => row.userName,
       sortable: true,
-      width: "180px",
+      width: "140px",
+      wrap: true,
     },
     {
       name: "Items",
-      selector: (row) => (
-        <ul style={{ paddingLeft: "15px" }}>
+      selector: (row) => row.items,
+      cell: (row) => (
+        <ul className="order-items-list">
           {row.items.map((item, index) => (
             <li key={index}>
               {item.name} (x{item.quantity})
@@ -36,36 +36,29 @@ const ListOrders = () => {
           ))}
         </ul>
       ),
+      sortable: false,
+      width: "200px",
     },
     {
       name: "Delivery Address",
       selector: (row) =>
         `${row.address.street}, ${row.address.city}, ${row.address.postalCode}`,
       sortable: true,
-      width: "250px",
+      width: "140px",
+      wrap: true,
     },
     {
       name: "Amount",
       selector: (row) => `Rs. ${row.amount}`,
       sortable: true,
     },
-    // {
-    //   name: "Status",
-    //   selector: (row) => row.status,
-    //   sortable: true,
-    // },
     {
       name: "Status",
       cell: (row) => (
         <select
           value={row.status}
           onChange={(e) => handleStatusChange(row._id, e.target.value)}
-          style={{
-            padding: "5px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-            backgroundColor: "#fff",
-          }}
+          className="order-status-select"
         >
           {statusOptions.map((status) => (
             <option key={status} value={status}>
@@ -75,9 +68,8 @@ const ListOrders = () => {
         </select>
       ),
       sortable: false,
-      width: "160px",
+      width: "140px",
     },
-
     {
       name: "Payment",
       selector: (row) => (row.payment ? "Paid" : "Pending"),
@@ -87,12 +79,18 @@ const ListOrders = () => {
       name: "Order Date",
       selector: (row) => new Date(row.createdAt).toLocaleString(),
       sortable: true,
-      width: "180px",
+      width: "110px",
+      wrap: true,
+    },
+    {
+      name: "Print",
+      cell: (row) => <PrintOrderButton order={row} className="print-btn" />,
+      sortable: false,
+      width: "110px",
+      wrap: true,
+      
     },
   ];
-
-  // status : ["processing", "shipped", "done", "ready for pickup"]
-  const statusOptions = ["processing", "shipped", "ready for pickup", "done"];
 
   const customStyles = {
     headCells: {
@@ -107,11 +105,15 @@ const ListOrders = () => {
     rows: {
       style: {
         fontSize: "14px",
+        lineHeight: "1.5",
+        minHeight: "60px",
       },
     },
     cells: {
       style: {
         justifyContent: "left",
+        whiteSpace: "normal",
+        wordBreak: "break-word",
       },
     },
   };
@@ -121,8 +123,44 @@ const ListOrders = () => {
       const response = await axios.get(`${url}/api/orders/getOrders`, {
         headers: { token: `${token}` },
       });
+
       if (response.data.success) {
-        setOrders(response.data.orders);
+        const ordersWithUserNames = await Promise.all(
+          response.data.orders.map(async (order) => {
+            try {
+              const userRes = await axios.get(
+                `${url}/api/users/getUser/${order.userId}`,
+                {
+                  headers: { token: `${token}` },
+                }
+              );
+
+              return {
+                ...order,
+                userName: userRes.data.success
+                  ? userRes.data.user.name
+                  : "Unknown User",
+              };
+            } catch (err) {
+              return {
+                ...order,
+                userName: "Unknown User",
+              };
+            }
+          })
+        );
+
+        const sortedOrders = ordersWithUserNames.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        const counts = sortedOrders.reduce((acc, order) => {
+          acc[order.status] = (acc[order.status] || 0) + 1;
+          return acc;
+        }, {});
+
+        setOrders(sortedOrders);
+        setStatusCounts(counts);
       } else {
         toast.error(response.data.message);
       }
@@ -132,21 +170,12 @@ const ListOrders = () => {
     }
   };
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       const response = await axios.post(
         `${url}/api/orders/statusUpdate`,
-        {
-          orderId,
-          status: newStatus,
-        },
-        {
-          headers: { token: `${token}` },
-        }
+        { orderId, status: newStatus },
+        { headers: { token: `${token}` } }
       );
 
       if (response.data.success) {
@@ -161,20 +190,43 @@ const ListOrders = () => {
     }
   };
 
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
   return (
     <>
       <Navbar />
       <div className="app-content">
         <Sidebar />
-        <div className="add">
-          <h2>All Orders</h2>
-          <DataTable
-            columns={columns}
-            data={orders}
-            fixedHeader
-            pagination
-            customStyles={customStyles}
-          />
+        <div className="list_items">
+          <div className="orders-header">
+            <h2 className="heading">All Orders</h2>
+            <div className="status-counts">
+              <span className="status-processing">
+                Processing: {statusCounts["processing"] || 0}
+              </span>
+              <span className="status-shipped">
+                Shipped: {statusCounts["shipped"] || 0}
+              </span>
+              <span className="status-pickup">
+                Ready for Pickup: {statusCounts["ready for pickup"] || 0}
+              </span>
+              <span className="status-done">
+                Done: {statusCounts["done"] || 0}
+              </span>
+            </div>
+          </div>
+
+          <div className="list_table">
+            <DataTable
+              columns={columns}
+              data={orders}
+              fixedHeader
+              pagination
+              customStyles={customStyles}
+            />
+          </div>
         </div>
       </div>
     </>

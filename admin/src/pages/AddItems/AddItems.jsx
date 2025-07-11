@@ -9,6 +9,8 @@ import config from "../../../config.json";
 
 const AddItems = () => {
   const url = config.baseURL;
+  const token = localStorage.getItem("authToken");
+
   const [data, setData] = useState({
     name: "",
     description: "",
@@ -16,20 +18,20 @@ const AddItems = () => {
     category: "",
     countInStock: "",
     imageURL: "",
+    imageFile: null,
   });
+
   const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState({});
   const [selectedImage, setSelectedImage] = useState(null);
-
-  const token = localStorage.getItem("authToken");
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${url}/api/categories`, {
-          headers: {
-            token: `${token}`,
-          },
+          headers: { token: `${token}` },
         });
         if (response.data.success) {
           setCategories(response.data.data);
@@ -46,9 +48,8 @@ const AddItems = () => {
   }, []);
 
   const onChangeHandler = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setData((data) => ({ ...data, [name]: value }));
+    const { name, value } = event.target;
+    setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleImageChange = (e) => {
@@ -61,37 +62,15 @@ const AddItems = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!data.name) {
-      errors.name = "Product name is required";
-    }
-
-    if (!data.description) {
-      errors.description = "Product description is required";
-    }
-
-    if (!data.price) {
-      errors.price = "Product price is required";
-    }
-
-    if (!data.category) {
-      errors.category = "Product category is required";
-    }
-
-    if (!data.countInStock) {
-      errors.countInStock = "Product count in stock is required";
-    }
-
-    if (!data.imageFile) {
-      errors.imageURL = "Product image is required";
-    }
+    if (!data.name) errors.name = "Product name is required";
+    if (!data.description) errors.description = "Product description is required";
+    if (!data.price) errors.price = "Product price is required";
+    if (!data.category) errors.category = "Product category is required";
+    if (!data.countInStock) errors.countInStock = "Product count in stock is required";
+    if (!data.imageFile) errors.imageURL = "Product image is required";
 
     setErrors(errors);
-
-    if (Object.keys(errors).length > 0) {
-      return false;
-    }
-
-    return true;
+    return Object.keys(errors).length === 0;
   };
 
   const uploadImageToCloudinary = async () => {
@@ -103,28 +82,20 @@ const AddItems = () => {
     try {
       const response = await fetch(
         "https://api.cloudinary.com/v1_1/dclji77rq/image/upload",
-        {
-          method: "post",
-          body: formData,
-        }
+        { method: "post", body: formData }
       );
-
       const result = await response.json();
-      return result.url; // Return the Cloudinary URL
+      return result.url;
     } catch (error) {
-      console.error("Error uploading image to Cloudinary:", error);
+      console.error("Error uploading image:", error);
       throw new Error("Image upload failed");
     }
   };
 
   const addProduct = async () => {
-    const isValid = validateForm();
-    if (!isValid) {
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
-      // Upload image to Cloudinary
       const imageURL = await uploadImageToCloudinary();
 
       const payload = {
@@ -163,19 +134,80 @@ const AddItems = () => {
     }
   };
 
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) {
+      toast.error("Category name cannot be empty");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${url}/api/categories/add`,
+        { name: newCategoryName },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: `${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Category added successfully");
+        setNewCategoryName("");
+        setShowCategoryForm(false);
+
+        // Refresh categories
+        const updatedCategories = await axios.get(`${url}/api/categories`, {
+          headers: { token: `${token}` },
+        });
+        setCategories(updatedCategories.data.data);
+      } else {
+        toast.error(response.data.message || "Failed to add category");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong while adding category");
+    }
+  };
+
   return (
     <>
-      <div>
-        <Navbar />
-      </div>
+      <Navbar />
       <div className="app-content">
         <Sidebar />
         <div className="add">
+          <div className="heading-row">
+            <h2 className="heading">Add New Product</h2>
+            <button
+              className="add-category-btn"
+              onClick={() => setShowCategoryForm(true)}
+            >
+              + Add New Category
+            </button>
+          </div>
+
+          {showCategoryForm && (
+            <div className="category-form">
+              <input
+                type="text"
+                placeholder="Enter category name"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+              />
+              <button onClick={handleAddCategory}>Add</button>
+              <button
+                className="cancel-btn"
+                onClick={() => setShowCategoryForm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
           <form
             className="flex-col"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
+            onSubmit={(e) => e.preventDefault()}
           >
             <div className="add-details">
               <div>
@@ -186,22 +218,19 @@ const AddItems = () => {
                   name="name"
                   className={`add_input ${errors.name ? "error" : ""}`}
                   type="text"
-                  id="productName"
                   placeholder="Ex: Milk"
                 />
                 {errors.name && <p className="error-message">{errors.name}</p>}
               </div>
+
               <div>
                 <p>Product Description</p>
                 <textarea
                   onChange={onChangeHandler}
                   value={data.description}
                   name="description"
-                  className={`add_input text-area ${
-                    errors.description ? "error" : ""
-                  }`}
+                  className={`add_input text-area ${errors.description ? "error" : ""}`}
                   rows="6"
-                  id="description"
                   placeholder="Ex: Fresh milk from the farm"
                 ></textarea>
                 {errors.description && (
@@ -210,6 +239,7 @@ const AddItems = () => {
                   </p>
                 )}
               </div>
+
               <div>
                 <p>Product Category</p>
                 <select
@@ -217,7 +247,6 @@ const AddItems = () => {
                   value={data.category}
                   name="category"
                   className={`input ${errors.category ? "error" : ""}`}
-                  id="category"
                 >
                   <option value="" disabled>
                     Select Category
@@ -232,6 +261,7 @@ const AddItems = () => {
                   <p className="error-message-category">{errors.category}</p>
                 )}
               </div>
+
               <div className="product-details">
                 <div className="product-details-input">
                   <p>Count In Stock</p>
@@ -241,13 +271,13 @@ const AddItems = () => {
                     name="countInStock"
                     className={`input ${errors.countInStock ? "error" : ""}`}
                     type="number"
-                    id="productCount"
                     placeholder="Ex: 100"
                   />
                   {errors.countInStock && (
                     <p className="error-message">{errors.countInStock}</p>
                   )}
                 </div>
+
                 <div className="product-details-input">
                   <p>Product Price</p>
                   <input
@@ -256,7 +286,6 @@ const AddItems = () => {
                     name="price"
                     className={`input ${errors.price ? "error" : ""}`}
                     type="number"
-                    id="productPrice"
                     placeholder="Ex: 500"
                   />
                   {errors.price && (
@@ -264,33 +293,31 @@ const AddItems = () => {
                   )}
                 </div>
               </div>
+
               <div>
                 <button onClick={addProduct}>Add Product</button>
               </div>
             </div>
+
             <div className="add-img-upload">
               <p>Upload Image</p>
               <label htmlFor="image">
                 <img
                   src={selectedImage || assets.upload_area}
-                  alt="Product Preview"
+                  alt="Preview"
                   className="image-preview"
                 />
               </label>
               <input
                 type="file"
                 id="image"
-                className={`input ${errors.imageURL ? "error" : ""}`}
                 hidden
+                className={`input ${errors.imageURL ? "error" : ""}`}
                 onChange={handleImageChange}
               />
               {errors.imageURL && (
                 <p className="error-message">{errors.imageURL}</p>
               )}
-            </div>
-
-            <div className="btn" style={{ display: "none" }}>
-              <button onClick={addProduct}>Add Product</button>
             </div>
           </form>
         </div>
