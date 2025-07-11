@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import "./ExploreMenu.css";
-import { StoreContext } from "../../context/StoreContext"; // Adjust path as needed
+import { StoreContext } from "../../context/StoreContext";
 
 const ExploreMenu = ({ category, setCategory }) => {
   const { categoryList } = useContext(StoreContext);
