@@ -1,6 +1,6 @@
 .food-item {
   width: 280px;
-  height: 400px;
+  height: 340px;
   margin: auto;
   border-radius: 15px;
   box-shadow: -8px 1px 20px 10px rgba(79, 83, 85, 0.244);
@@ -38,13 +38,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .food-item-desc {
   color: #676767;
   font-size: 12px;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
   flex-grow: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -54,14 +54,14 @@
   color: #b5292f;
   font-size: 18px;
   font-weight: 600;
-  margin: 8px 0;
+  margin: 2px 0;
 }
 
 .food-item-action-container {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 3px;
 }
 
 .food-item-counter-aligned {
@@ -102,12 +102,13 @@
 
 .search-bar {
   width: 100%;
-  padding: 10px 40px 10px 15px; 
+  padding: 10px 40px 10px 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 16px;
   box-sizing: border-box;
 }
+
 .search-bar:focus {
   outline: none;
   border-color: #ff9900;
