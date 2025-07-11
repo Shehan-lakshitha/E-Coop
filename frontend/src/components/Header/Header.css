@@ -11,7 +11,6 @@
 }
 
 .header-contents {
-  
   display: flex;
   flex-direction: column;
   gap: 1.5vw;
@@ -19,37 +18,34 @@
 }
 
 .images {
-  
   width: 50%;
   height: 100%;
   display: flex;
-  object-fit:cover;  
-  
- 
+  object-fit: cover;
 }
 
 /* Typography */
 .header-contents h2 {
-  font-weight: 500;
+  font-weight: 600;
   color: white;
   font-size: max(3.5vw, 18px);
 }
 
 .header-contents p {
- text-align: justify;
+  text-align: justify;
   color: white;
   font-size: 1vw;
 }
 
 .header-contents button {
-    width: 50% ;
-    border: none;
-    color: #747474;
-    font-weight: 500;
-    padding: 1vw 2.3vw;
-    background-color: white;
-    font-size: max(1vw, 13px);
-    border-radius: 50px;
+  width: 50%;
+  border: none;
+  color: #747474;
+  font-weight: 500;
+  padding: 1vw 2.3vw;
+  background-color: white;
+  font-size: max(1vw, 13px);
+  border-radius: 50px;
 }
 
 /* Responsive */
@@ -60,13 +56,21 @@
   }
 
   .header-contents,
-   .images img {
+  .images img {
     width: 100%;
     height: auto;
   }
 
   .header-contents {
     max-width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .header-contents button {
+    padding: 1vw 2vw;
+    margin: 0 auto;
+    display: block;
   }
 }
 
@@ -76,7 +80,10 @@
   }
 
   .header-contents button {
-    padding: 2vw 4vw;
+    padding: 0.7vw 1vw;
+    margin: 0 auto;
+    display: block;
+    font-size: 10px;
   }
-  
+
 }
