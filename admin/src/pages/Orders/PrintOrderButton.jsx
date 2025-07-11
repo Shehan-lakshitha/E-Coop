@@ -4,8 +4,12 @@ const PrintOrderButton = ({ order }) => {
   const printOrder = () => {
     const printWindow = window.open("", "_blank", "width=600,height=600");
 
-    const totalAmount = order.amount || order.items.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-   
+    const totalAmount =
+      order.amount ||
+      order.items.reduce(
+        (sum, item) => sum + item.price * (item.quantity || 1),
+        0
+      );
 
     const orderHtml = `
       <html>
@@ -23,11 +27,17 @@ const PrintOrderButton = ({ order }) => {
         </head>
         <body>
           <h1>Invoice</h1>
-          <img src="../../assets/E-Coop.png" alt="Logo" style="max-height: 80px; max-width: 150px;" />
+          <div style="text-align: right; margin-top: -40px;">
+            <img src="./E-Coop.png" alt="Logo" style="height: 40px;" />
+            <p>+94 11 23 34 400</p>
+            <p>newecoop@gmail.com</p>
+          </div>
           <h2>Order Details</h2>
           <p><strong>Customer Name:</strong> ${order.userName || "Customer"}</p>
           <p><strong>Order ID:</strong> ${order._id}</p>
-          <p><strong>Order Date:</strong> ${order.createdAt ? new Date(order.createdAt).toLocaleString() : "N/A"}</p>
+          <p><strong>Order Date:</strong> ${
+            order.createdAt ? new Date(order.createdAt).toLocaleString() : "N/A"
+          }</p>
           <p><strong>Delivery Address:</strong> ${
             order.address
               ? `${order.address.street}, ${order.address.city}, ${order.address.postalCode}`

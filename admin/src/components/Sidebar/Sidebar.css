@@ -29,6 +29,10 @@
     border-radius: 10px;
 }
 
+.imgp{
+    width: 30px;
+    height: 30px;
+}
 @media screen and (max-width: 1024px) {
     .sidebar {
         height: 750px;

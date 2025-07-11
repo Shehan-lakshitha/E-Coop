@@ -48,7 +48,6 @@ const MyOrders = () => {
             .map((order, index) => (
               <div key={index} className="my-orders-order">
                 <div>
-                  {/* <img src={assets.parcel_icon} alt="Parcel Icon" /> */}
                   <p>
                     {order.items.map((item, idx) => (
                       <div key={idx}>
@@ -58,7 +57,7 @@ const MyOrders = () => {
                   </p>
                 </div>
 
-                <p>${order.amount}.00</p>
+                <p>Rs. {order.amount}.00</p>
 
                 <p>
                   <span style={{ color: "green" }}>&#x25cf;</span>{" "}
