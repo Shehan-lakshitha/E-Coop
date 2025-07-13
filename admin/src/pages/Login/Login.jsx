@@ -5,10 +5,11 @@ import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import config from "../../../config.json";
 
 const Login = () => {
   const navigate = useNavigate();
-  const url = "http://localhost:4000";
+  const url = config.baseURL;
   const [data, setData] = useState({
     email: "",
     password: "",
